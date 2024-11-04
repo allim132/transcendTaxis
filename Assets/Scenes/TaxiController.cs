@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TaxiController : MonoBehaviour
 {
@@ -56,7 +56,6 @@ public class TaxiController : MonoBehaviour
         {
             Vector3 direction = (targetPosition - transform.position).normalized;
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-
             rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime));
 
             Vector3 movement = transform.forward * moveSpeed * Time.fixedDeltaTime;
