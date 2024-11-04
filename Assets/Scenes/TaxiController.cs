@@ -4,10 +4,15 @@ public class TaxiController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float rotationSpeed = 100f;
+    public float maxBrakingForce = 2f;
+    public float brakingRate = 0.5f;
+    public float acceleration = 2f;
+    public float deceleration = 1f;
 
     private Vector3 targetPosition;
     private bool isMoving = false;
-    private Rigidbody rb; // Object is solid
+    private Rigidbody rb;
+    private float currentSpeed = 0f;
 
     void Start()
     {
@@ -26,14 +31,14 @@ public class TaxiController : MonoBehaviour
 
     void HandleInput()
     {
-        if (Input.touchCount > 0) // Touch input 
+        if (Input.touchCount > 0 || Input.GetMouseButton(0))
         {
-            Touch touch = Input.GetTouch(0);
-            HandleInputPosition(touch.position);
+            Vector2 inputPosition = Input.touchCount > 0 ? Input.GetTouch(0).position : (Vector2)Input.mousePosition;
+            HandleInputPosition(inputPosition);
         }
-        else if (Input.GetMouseButton(0)) // Mouse input for testing
+        else
         {
-            HandleInputPosition(Input.mousePosition);
+            isMoving = false;
         }
     }
 
@@ -44,7 +49,6 @@ public class TaxiController : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
-            // Ensure the target is at the same Y level as the taxi
             targetPosition = new Vector3(hit.point.x, transform.position.y, hit.point.z);
             isMoving = true;
         }
@@ -56,16 +60,23 @@ public class TaxiController : MonoBehaviour
         {
             Vector3 direction = (targetPosition - transform.position).normalized;
             Quaternion targetRotation = Quaternion.LookRotation(direction);
+
             rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime));
 
-            Vector3 movement = transform.forward * moveSpeed * Time.fixedDeltaTime;
+            currentSpeed = Mathf.MoveTowards(currentSpeed, moveSpeed, acceleration * Time.fixedDeltaTime);
+            Vector3 movement = transform.forward * currentSpeed * Time.fixedDeltaTime;
             rb.MovePosition(rb.position + movement);
 
             if (Vector3.Distance(rb.position, targetPosition) < 0.1f)
             {
                 isMoving = false;
-                rb.linearVelocity = Vector3.zero;
             }
+        }
+        else
+        {
+            currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, deceleration * Time.fixedDeltaTime);
+            Vector3 movement = transform.forward * currentSpeed * Time.fixedDeltaTime;
+            rb.MovePosition(rb.position + movement);
         }
     }
 }
