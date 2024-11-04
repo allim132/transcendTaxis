@@ -2,12 +2,12 @@
 
 public class TaxiController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float rotationSpeed = 100f;
-    public float maxBrakingForce = 2f;
-    public float brakingRate = 0.5f;
-    public float acceleration = 2f;
-    public float deceleration = 1f;
+    public float moveSpeed;
+    public float rotationSpeed;
+    public float maxBrakingForce;
+    public float brakingRate;
+    public float acceleration;
+    public float deceleration;
 
     private Vector3 targetPosition;
     private bool isMoving = false;
