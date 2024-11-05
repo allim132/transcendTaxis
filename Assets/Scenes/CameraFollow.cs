@@ -3,9 +3,9 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     public Transform target;  // The taxi's transform
-    public float distance = 10f;  // Distance from the target
-    public float height = 10f;  // Height above the target
-    public float smoothSpeed = 0.125f;  // How smoothly the camera follows the taxi
+    public float distance;  // Distance from the target
+    public float height;  // Height above the target
+    public float smoothSpeed;  // How smoothly the camera follows the taxi
 
     private Vector3 offset;
 
