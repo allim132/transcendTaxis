@@ -537,11 +537,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  rotationSpeed: 500
+  rotationSpeed: 200
   maxBrakingForce: 1
   brakingRate: 0.2
   acceleration: 2
-  deceleration: 1
+  deceleration: 4
 --- !u!65 &1775299488
 BoxCollider:
   m_ObjectHideFlags: 0
