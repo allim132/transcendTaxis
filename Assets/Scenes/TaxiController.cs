@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using System.Diagnostics;
+using System.Collections.Specialized;
 
 public class Car_Controller : MonoBehaviour
 {
@@ -181,6 +182,14 @@ public class Car_Controller : MonoBehaviour
 
     [Space(15)]
 
+    [Header("Touchscreen")]
+    public float movementSpeed = 5f;
+    public float rotationSpeed = 5f;
+    public LayerMask groundLayer;
+    private Vector3 targetPosition;
+
+    [Space(15)]
+
     public bool HeadLights_On; //Headlights on/off?
 
     //Debug Values in Int Form
@@ -202,6 +211,10 @@ public class Car_Controller : MonoBehaviour
     private float Brakes = 0f; //Brakes
     private WheelFrictionCurve Wheel_forwardFriction, Wheel_sidewaysFriction; //Wheel friction curve(s)
     private float Next_Boost_Time; //Next boost time
+    
+    private Vector2 touchStartPosition; // For touch/mouse control
+    private Vector3 lastForward; // For relative turning
+
 
     private Material Headlight_Mat; //Headlight GameObject Material
     private Material BrakeLight_Mat; //Brake Light GameObject Material
@@ -335,9 +348,23 @@ public class Car_Controller : MonoBehaviour
         //Making The Car Turn/Steer
         if (Car_Started)
         {
-            foreach (WheelCollider Wheel in Front_Wheels)
+            // Handle input and movement
+            HandleInputAndMovement();
+
+            // Apply acceleration
+            if (Car_Speed_In_KPH < Maximum_Speed)
             {
-                Wheel.steerAngle = Input.GetAxis("Horizontal") * Max_Steer_Angle; //Turn the wheels
+                foreach (WheelCollider Wheel in Back_Wheels)
+                {
+                    Wheel.motorTorque = Motor_Torque * ((Motor_Torque * 5) / (Back_Wheels.Count + Front_Wheels.Count));
+                }
+            }
+            else
+            {
+                foreach (WheelCollider Wheel in Back_Wheels)
+                {
+                    Wheel.motorTorque = 0;
+                }
             }
         }
 
@@ -855,6 +882,53 @@ public class Car_Controller : MonoBehaviour
             {
                 P.Play();
             }
+        }
+    }
+
+    public void HandleInputAndMovement()
+    {
+        // Check for touch or mouse input
+        if (Input.touchCount > 0 || Input.GetMouseButton(0))
+        {
+            Ray ray;
+            if (Input.touchCount > 0)
+            {
+                ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+            }
+            else
+            {
+                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            }
+
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, groundLayer))
+            {
+                targetPosition = hit.point;
+                targetPosition.y = transform.position.y; // Keep the same height as the car
+            }
+        }
+
+        // Look at the target position
+        Vector3 lookDirection = targetPosition - transform.position;
+        lookDirection.y = 0; // Ensure the car doesn't tilt up or down
+        if (lookDirection != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+        }
+
+        // Move towards the target position
+        Vector3 movement = Vector3.MoveTowards(transform.position, targetPosition, movementSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(movement);
+
+        // Calculate steering angle based on the difference between current forward and target direction
+        Vector3 localTarget = transform.InverseTransformPoint(targetPosition);
+        float steerAngle = Mathf.Clamp(Mathf.Atan2(localTarget.x, localTarget.z) * Mathf.Rad2Deg, -Max_Steer_Angle, Max_Steer_Angle);
+
+        // Apply steering
+        foreach (WheelCollider Wheel in Front_Wheels)
+        {
+            Wheel.steerAngle = steerAngle;
         }
     }
 }
