@@ -1,4 +1,0 @@
-repository "TrascendTaxis@allim1@cloud"
-  path "/"
-    br "/main"
-    co "/main"
