@@ -8,6 +8,9 @@ public class TaxiController : MonoBehaviour
     public float brakingRate;
     public float acceleration;
     public float deceleration;
+    public float collisionForce = 10f; // Force to apply when colliding
+    public float collisionCheckDistance = 0.5f; // Distance to check for collisions
+    public float bounciness = 0.5f; // Adjust this value in the Inspector
 
     private Vector3 targetPosition;
     private bool isMoving = false;
@@ -64,7 +67,12 @@ public class TaxiController : MonoBehaviour
 
             currentSpeed = Mathf.MoveTowards(currentSpeed, moveSpeed, acceleration * Time.fixedDeltaTime);
             Vector3 movement = transform.forward * currentSpeed * Time.fixedDeltaTime;
-            rb.MovePosition(rb.position + movement);
+
+            // Check for collision before moving
+            if (!CheckCollision(movement))
+            {
+                rb.MovePosition(rb.position + movement);
+            }
 
             if (Vector3.Distance(rb.position, targetPosition) < 0.1f)
             {
@@ -75,7 +83,42 @@ public class TaxiController : MonoBehaviour
         {
             currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, deceleration * Time.fixedDeltaTime);
             Vector3 movement = transform.forward * currentSpeed * Time.fixedDeltaTime;
-            rb.MovePosition(rb.position + movement);
+
+            // Check for collision before moving
+            if (!CheckCollision(movement))
+            {
+                rb.MovePosition(rb.position + movement);
+            }
         }
     }
+
+    private bool CheckCollision(Vector3 movement)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, movement.normalized, out hit, movement.magnitude + collisionCheckDistance))
+        {
+            if (hit.collider.CompareTag("Wall"))
+            {
+                // Calculate reflection direction
+                Vector3 reflectDir = Vector3.Reflect(movement.normalized, hit.normal);
+
+                // Calculate new velocity after bounce
+                Vector3 newVelocity = reflectDir * currentSpeed * bounciness;
+
+                // Apply the new velocity
+                rb.linearVelocity = newVelocity;
+
+                // Update current speed
+                currentSpeed = newVelocity.magnitude;
+
+                // Update rotation to face the new direction
+                transform.rotation = Quaternion.LookRotation(reflectDir);
+
+                return true; // Collision detected
+            }
+        }
+        return false; // No collision
+    }
+
+
 }
