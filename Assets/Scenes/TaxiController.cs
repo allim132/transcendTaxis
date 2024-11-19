@@ -99,20 +99,31 @@ public class TaxiController : MonoBehaviour
         {
             if (hit.collider.CompareTag("Wall"))
             {
-                // Calculate reflection direction
-                Vector3 reflectDir = Vector3.Reflect(movement.normalized, hit.normal);
+                // Calculate the angle between the car's forward direction and the wall's normal
+                float impactAngle = Vector3.Angle(transform.forward, hit.normal);
 
-                // Calculate new velocity after bounce
-                Vector3 newVelocity = reflectDir * currentSpeed * bounciness;
+                // Determine the severity of the collision based on the impact angle
+                float collisionSeverity = Mathf.Clamp01(1 - (impactAngle / 90f) * bounciness);
+
+                // Calculate a reduced speed based on the collision severity
+                float reducedSpeed = currentSpeed * (1 - collisionSeverity);
+
+                // Calculate a blended direction between the current forward and the reflection
+                Vector3 reflectDir = Vector3.Reflect(movement.normalized, hit.normal);
+                Vector3 blendedDir = Vector3.Lerp(transform.forward, reflectDir, collisionSeverity);
 
                 // Apply the new velocity
-                rb.linearVelocity = newVelocity;
+                rb.linearVelocity = blendedDir * reducedSpeed;
 
                 // Update current speed
-                currentSpeed = newVelocity.magnitude;
+                currentSpeed = reducedSpeed;
 
-                // Update rotation to face the new direction
-                transform.rotation = Quaternion.LookRotation(reflectDir);
+                // Smoothly rotate towards the new direction
+                Quaternion targetRotation = Quaternion.LookRotation(blendedDir);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, collisionSeverity);
+
+                // Apply a small backwards force to simulate impact
+                rb.AddForce(-movement.normalized * collisionForce, ForceMode.Impulse);
 
                 return true; // Collision detected
             }
