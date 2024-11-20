@@ -16,7 +16,7 @@ public class BuildingLights : MonoBehaviour {
     }
 
     public void SetLights(bool isOn) {
-        mr.materials[windowMaterialIndex].shader = isOn ? Shader.Find("Unlit/Color") : Shader.Find("Standard");
+        mr.materials[windowMaterialIndex].shader = isOn ? Shader.Find("Unlit/Color") : Shader.Find("Universal Render Pipeline/Lit");
         mr.materials[windowMaterialIndex].color = isOn ? lightColor : defaultColor;
     }
 }

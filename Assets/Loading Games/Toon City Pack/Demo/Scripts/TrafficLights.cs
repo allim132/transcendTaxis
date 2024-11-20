@@ -11,7 +11,7 @@ public class TrafficLights : MonoBehaviour {
 
     private void Start() {
         mr = GetComponent<MeshRenderer>();
-        defShader = Shader.Find("Standard");
+        defShader = Shader.Find("Universal Render Pipeline/Lit");
         unlitShader = Shader.Find("Unlit/Color");
         SetLight(activeLight);
     }
