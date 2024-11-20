@@ -11,6 +11,7 @@ something useful for your game. Best regards, Mena.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -903,7 +904,7 @@ public class PrometeoCarController : MonoBehaviour
             deceleratingCar = false;
             GoReverse();
         }
-        else
+        else if (rightDot !> 0.2f && rightDot !< -0.2f)
         {
             InvokeRepeating("DecelerateCar", 0f, 0.1f);
             deceleratingCar = true;
