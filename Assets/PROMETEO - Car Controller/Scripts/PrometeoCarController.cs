@@ -886,10 +886,14 @@ public class PrometeoCarController : MonoBehaviour
         // Handle forward/reverse movement
         if (forwardDot > 0.2f)
         {
+            CancelInvoke("DecelerateCar");
+            deceleratingCar = false;
             GoForward();
         }
         else if (forwardDot < -0.2f)
         {
+            CancelInvoke("DecelerateCar");
+            deceleratingCar = false;
             GoReverse();
         }
         else
