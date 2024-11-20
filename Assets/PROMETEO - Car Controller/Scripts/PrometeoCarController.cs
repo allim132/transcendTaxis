@@ -140,9 +140,8 @@ public class PrometeoCarController : MonoBehaviour
     //PRIVATE VARIABLES
 
     // These variables are used for calculation of touchscreen based movement
-    private Vector3 touchStartPosition;
     private Vector3 touchEndPosition;
-    private bool isTouching = false;
+    
 
     /*
     IMPORTANT: The following variables should not be modified manually since their values are automatically given via script.
@@ -421,8 +420,6 @@ public class PrometeoCarController : MonoBehaviour
                 switch (touch.phase)
                 {
                     case TouchPhase.Began:
-                        touchStartPosition = GetWorldPositionFromTouch(touch.position);
-                        break;
                     case TouchPhase.Moved:
                     case TouchPhase.Stationary:
                         touchEndPosition = GetWorldPositionFromTouch(touch.position);
@@ -436,8 +433,6 @@ public class PrometeoCarController : MonoBehaviour
                 CancelInvoke("DecelerateCar");
                 deceleratingCar = false;
                 Handbrake();
-
-                Debug.Log("Handbreak activited");
             }
         }
 
@@ -888,23 +883,37 @@ public class PrometeoCarController : MonoBehaviour
 
         float forwardDot = Vector3.Dot(touchDirection.normalized, carForward.normalized);
         float rightDot = Vector3.Dot(touchDirection.normalized, carRight.normalized);
-        Debug.Log("ForwardDot value: " + forwardDot);
-        Debug.Log("rightDot value: " + rightDot);
 
         // Handle forward/reverse movement
         if (forwardDot > 0.2f)
         {
-            CancelInvoke("DecelerateCar");
-            deceleratingCar = false;
-            GoForward();
+            if (throttleAxis < 0f && (rightDot < 0.2f && rightDot > -0.2f))
+            {
+                InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                deceleratingCar = true;
+            } else
+            {
+                CancelInvoke("DecelerateCar");
+                deceleratingCar = false;
+                GoForward();
+            }
+            
         }
-        else if (forwardDot < -0.2f)
+        else if (forwardDot < -0.2 )
         {
-            CancelInvoke("DecelerateCar");
-            deceleratingCar = false;
-            GoReverse();
+            if (throttleAxis > 0f && (rightDot < 0.2f && rightDot > -0.2f))
+            {
+                InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                deceleratingCar = true;
+            } else
+            {
+                CancelInvoke("DecelerateCar");
+                deceleratingCar = false;
+                GoReverse();
+            }
+            
         }
-        else if (rightDot !> 0.2f && rightDot !< -0.2f)
+        else if (rightDot < 0.2f && rightDot > -0.2f)
         {
             InvokeRepeating("DecelerateCar", 0f, 0.1f);
             deceleratingCar = true;
@@ -926,4 +935,5 @@ public class PrometeoCarController : MonoBehaviour
         }
         
     }
+
 }

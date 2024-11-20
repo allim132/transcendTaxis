@@ -82,6 +82,7 @@ public class PrometeoEditor : Editor{
   //
   //
   private void OnEnable(){
+    // Debug.Log("Target type: " + target.GetType());
     prometeo = (PrometeoCarController)target;
     SO = new SerializedObject(target);
 
