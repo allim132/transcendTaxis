@@ -435,6 +435,8 @@ public class PrometeoCarController : MonoBehaviour
                 CancelInvoke("DecelerateCar");
                 deceleratingCar = false;
                 Handbrake();
+
+                Debug.Log("Handbreak activited");
             }
         }
 
@@ -563,11 +565,6 @@ public class PrometeoCarController : MonoBehaviour
         rearRightCollider.GetWorldPose(out RRWPosition, out RRWRotation);
         rearRightMesh.transform.position = RRWPosition;
         rearRightMesh.transform.rotation = RRWRotation;
-
-        Debug.Log("frontLeftCollider pos: " + FLWPosition);
-        Debug.Log("frontRightCollider pos: " + FRWPosition);
-        Debug.Log("rearLeftCollider pos: " + RLWPosition);
-        Debug.Log("rearRightCollider pos: " + RRWPosition);
         }
         catch(Exception ex){
         Debug.LogWarning(ex);
@@ -870,52 +867,6 @@ public class PrometeoCarController : MonoBehaviour
 
 
     // This is used to call the respective actions based on the touch input
-    /*
-     *if (Input.GetKey(KeyCode.W))
-                {
-                    CancelInvoke("DecelerateCar");
-                    deceleratingCar = false;
-                    GoForward();
-                }
-                if (Input.GetKey(KeyCode.S))
-                {
-                    CancelInvoke("DecelerateCar");
-                    deceleratingCar = false;
-                    GoReverse();
-                }
-
-                if (Input.GetKey(KeyCode.A))
-                {
-                    TurnLeft();
-                }
-                if (Input.GetKey(KeyCode.D))
-                {
-                    TurnRight();
-                }
-                if (Input.GetKey(KeyCode.Space))
-                {
-                    CancelInvoke("DecelerateCar");
-                    deceleratingCar = false;
-                    Handbrake();
-                }
-                if (Input.GetKeyUp(KeyCode.Space))
-                {
-                    RecoverTraction();
-                }
-                if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)))
-                {
-                    ThrottleOff();
-                }
-                if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)) && !Input.GetKey(KeyCode.Space) && !deceleratingCar)
-                {
-                    InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                    deceleratingCar = true;
-                }
-                if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && steeringAxis != 0f)
-                {
-                    ResetSteeringAngle();
-                }
-     */
     void ProcessTouchInput()
     {
         Vector3 touchDirection = touchEndPosition - touchStartPosition;
@@ -929,32 +880,32 @@ public class PrometeoCarController : MonoBehaviour
 
         float forwardDot = Vector3.Dot(touchDirection.normalized, carForward.normalized);
         float rightDot = Vector3.Dot(touchDirection.normalized, carRight.normalized);
-
+        Debug.Log("ForwardDot value: " + forwardDot);
+        Debug.Log("rightDot value: " + rightDot);
 
         // Handle forward/reverse movement
-        if (forwardDot > 0.1f)
+        if (forwardDot > 0.2f)
         {
             GoForward();
         }
-        else if (forwardDot < -0.1f)
+        else if (forwardDot < -0.2f)
         {
             GoReverse();
         }
         else
         {
-            ThrottleOff();
             InvokeRepeating("DecelerateCar", 0f, 0.1f);
             deceleratingCar = true;
         }
         
 
         // Handle turning
-        if (rightDot > 0.1f)
+        if (rightDot > 0.2f)
         {
             TurnRight();
         }
-        else if (rightDot < -0.1f)
-        {
+        else if (rightDot < -0.2f)
+        { 
             TurnLeft();
         }
         else
