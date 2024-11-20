@@ -1,135 +1,117 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[System.Serializable]
+public class CarStats : System.Object
+{
+    [Range(0, 10)]
+    public int topSpeed = 5;
+    [Range(0, 10)]
+    public int acceleration = 5;
+    [Range(0, 10)]
+    public int handling = 5;
+    [Range(10, 50)]
+    public int steerAngle = 30;
+    [Range(500, 5000)]
+    public int vehicleMass = 2500;
+    public Vector3 vehicleCenterOfMass;
+}
+
+[System.Serializable]
+public class CarAxelGroup : System.Object
+{
+    public WheelCollider leftWheel;
+    public GameObject leftWheelMesh;
+    public WheelCollider rightWheel;
+    public GameObject rightWheelMesh;
+    public bool steering;
+    public bool reverseTurn;
+}
 
 public class TaxiController : MonoBehaviour
 {
-    public float moveSpeed;
-    public float rotationSpeed;
-    public float maxBreakingForce;
-    public float brakingRate;
-    public float acceleration;
-    public float deceleration;
-    public float collisionForce = 10f; // Force to apply when colliding
-    public float collisionCheckDistance = 0.5f; // Distance to check for collisions
-    public float bounciness = 0.5f; // Adjust this value in the Inspector
+    public CarStats stats;
+    public bool braking;
+    public float currentSteer;
+    public float currentSpeed;
+    public AnimationCurve accelerationCurve;
+    public List<CarAxelGroup> axels;
 
-    private Vector3 targetPosition;
-    private bool isMoving = false;
-    private Rigidbody rb;
-    private float currentSpeed = 0f;
+    private Rigidbody carBody;
 
-    private void Start()
+    void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        carBody = GetComponent<Rigidbody>();
+        carBody.mass = stats.vehicleMass;
+        carBody.centerOfMass = stats.vehicleCenterOfMass;
     }
 
-    private void Update()
+    void Update()
     {
-        HandleInput();
-    }
-
-    private void FixedUpdate()
-    {
-        MoveTaxi();
-    }
-
-    private void HandleInput()
-    {
-        if (Input.touchCount > 0 || Input.GetMouseButton(0))
+        foreach (CarAxelGroup carAxel in axels)
         {
-            Vector2 inputPosition = Input.touchCount > 0 ? Input.GetTouch(0).position : (Vector2)Input.mousePosition;
-            HandleInputPosition(inputPosition);
-        } else
-        {
-            isMoving = false;
-        }
-    }
+            carAxel.leftWheel.motorTorque = currentSpeed * Time.deltaTime * 75000;
+            carAxel.rightWheel.motorTorque = currentSpeed * Time.deltaTime * 75000;
 
-    void HandleInputPosition(Vector2 inputPosition)
-    {
-        Ray ray = Camera.main.ScreenPointToRay(inputPosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            targetPosition = new Vector3(hit.point.x, transform.position.y, hit.point.z);
-            isMoving = true;
-        }
-    }
-
-    private void MoveTaxi()
-    {
-        if (isMoving)
-        {
-            Vector3 direction = (targetPosition - transform.position).normalized;
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime));
-
-            currentSpeed = Mathf.MoveTowards(currentSpeed, moveSpeed, acceleration * Time.fixedDeltaTime);
-            Vector3 movement = transform.forward * currentSpeed * Time.fixedDeltaTime;
-
-            // Check for collision before moving
-            if (!CheckCollision(movement))
+            if (carAxel.steering)
             {
-                rb.MovePosition(rb.position + movement);
+                carAxel.leftWheel.steerAngle = currentSteer * stats.steerAngle;
+                carAxel.rightWheel.steerAngle = currentSteer * stats.steerAngle;
             }
 
-            if (Vector3.Distance(rb.position, targetPosition) < 0.1f)
+            if (braking)
             {
-                isMoving = false;
+                currentSpeed = Mathf.MoveTowards(currentSpeed, 0, Time.deltaTime * stats.handling * 3);
+                carAxel.leftWheel.brakeTorque += 300 * stats.handling;
+                carAxel.rightWheel.brakeTorque += 300 * stats.handling;
             }
-        }
-        else
-        {
-            currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, deceleration * Time.fixedDeltaTime);
-            Vector3 movement = transform.forward * currentSpeed * Time.fixedDeltaTime;
+            else
+            {
+                carAxel.leftWheel.brakeTorque = 0;
+                carAxel.rightWheel.brakeTorque = 0;
+            }
 
-            // Check for collision before moving
-            if (!CheckCollision(movement))
-            {
-                rb.MovePosition(rb.position + movement);
-            }
+            VisualizeWheel(carAxel);
         }
     }
 
-    private bool CheckCollision(Vector3 movement)
+    public void Steer(float steerFactor)
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, movement.normalized, out hit, movement.magnitude + collisionCheckDistance))
-        {
-            if (hit.collider.CompareTag("Wall"))
-            {
-                // Calculate the angle between the car's forward direction and the wall's normal
-                float impactAngle = Vector3.Angle(transform.forward, hit.normal);
-
-                // Determine the severity of the collision based on the impact angle
-                float collisionSeverity = Mathf.Clamp01(1 - (impactAngle / 90f) * bounciness);
-
-                // Calculate a reduced speed based on the collision severity
-                float reducedSpeed = currentSpeed * (1 - collisionSeverity);
-
-                // Calculate a blended direction between the current forward and the reflection
-                Vector3 reflectDir = Vector3.Reflect(movement.normalized, hit.normal);
-                Vector3 blendedDir = Vector3.Lerp(transform.forward, reflectDir, collisionSeverity);
-
-                // Apply the new velocity
-                rb.linearVelocity = blendedDir * reducedSpeed;
-
-                // Update current speed
-                currentSpeed = reducedSpeed;
-
-                // Smoothly rotate towards the new direction
-                Quaternion targetRotation = Quaternion.LookRotation(blendedDir);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, collisionSeverity);
-
-                // Apply a small backwards force to simulate impact
-                rb.AddForce(-movement.normalized * collisionForce, ForceMode.Impulse);
-
-                return true; // Collision detected
-            }
-        }
-        return false; // No collision
+        currentSteer = Mathf.MoveTowards(currentSteer, steerFactor, Time.deltaTime * stats.handling);
     }
 
+    public void RevertSteering()
+    {
+        currentSteer = Mathf.MoveTowards(currentSteer, 0, Time.deltaTime * stats.handling * 2);
+    }
 
+    public void Accelerate()
+    {
+        currentSpeed = Mathf.Clamp(currentSpeed, 0, stats.topSpeed);
+        currentSpeed += accelerationCurve.Evaluate(Mathf.Abs(currentSpeed) / stats.topSpeed) * Time.deltaTime * stats.acceleration;
+    }
+
+    public void Reverse()
+    {
+        currentSpeed = Mathf.Clamp(currentSpeed, -stats.topSpeed / 2, 0);
+        currentSpeed -= accelerationCurve.Evaluate(Mathf.Abs(currentSpeed) / stats.topSpeed) * Time.deltaTime * stats.acceleration;
+    }
+
+    public void SlowDown()
+    {
+        currentSpeed = Mathf.MoveTowards(currentSpeed, 0, Time.deltaTime * stats.handling);
+    }
+
+    public void VisualizeWheel(CarAxelGroup wheelPair)
+    {
+        Quaternion rot;
+        Vector3 pos;
+        wheelPair.leftWheel.GetWorldPose(out pos, out rot);
+        wheelPair.leftWheelMesh.transform.position = pos;
+        wheelPair.leftWheelMesh.transform.rotation = rot;
+        wheelPair.rightWheel.GetWorldPose(out pos, out rot);
+        wheelPair.rightWheelMesh.transform.position = pos;
+        wheelPair.rightWheelMesh.transform.rotation = rot;
+    }
 }
