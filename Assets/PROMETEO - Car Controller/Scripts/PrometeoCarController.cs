@@ -131,12 +131,22 @@ public class PrometeoCarController : MonoBehaviour
       [HideInInspector]
       public bool isTractionLocked; // Used to know whether the traction of the car is locked or not.
 
+      [HideInInspector]
+      public bool useScreenTouch; // Used to ensure logic for screen touch is used.
+      public Camera mainCamera; // Used to calculate touchscreen based movement (Without buttons).
+
+
     //PRIVATE VARIABLES
 
-      /*
-      IMPORTANT: The following variables should not be modified manually since their values are automatically given via script.
-      */
-      Rigidbody carRigidbody; // Stores the car's rigidbody.
+    // These variables are used for calculation of touchscreen based movement
+    private Vector3 touchStartPosition;
+    private Vector3 touchEndPosition;
+    private bool isTouching = false;
+
+    /*
+    IMPORTANT: The following variables should not be modified manually since their values are automatically given via script.
+    */
+    Rigidbody carRigidbody; // Stores the car's rigidbody.
       float steeringAxis; // Used to know whether the steering wheel has reached the maximum value. It goes from -1 to 1.
       float throttleAxis; // Used to know whether the throttle has reached the maximum value. It goes from -1 to 1.
       float driftingAxis;
@@ -161,6 +171,13 @@ public class PrometeoCarController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Check if main camera loaded and enabled
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
+
+
       //In this part, we set the 'carRigidbody' value with the Rigidbody attached to this
       //gameObject. Also, we define the center of mass of the car with the Vector3 given
       //in the inspector.
@@ -271,6 +288,7 @@ public class PrometeoCarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+      //
 
       //CAR DATA
 
@@ -293,83 +311,134 @@ public class PrometeoCarController : MonoBehaviour
       In this part of the code we specify what the car needs to do if the user presses W (throttle), S (reverse),
       A (turn left), D (turn right) or Space bar (handbrake).
       */
-      if (useTouchControls && touchControlsSetup){
+      if (!useScreenTouch)
+        {
+            if (useTouchControls && touchControlsSetup)
+            {
 
-        if(throttlePTI.buttonPressed){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          GoForward();
-        }
-        if(reversePTI.buttonPressed){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          GoReverse();
+                if (throttlePTI.buttonPressed)
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    GoForward();
+                }
+                if (reversePTI.buttonPressed)
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    GoReverse();
+                }
+
+                if (turnLeftPTI.buttonPressed)
+                {
+                    TurnLeft();
+                }
+                if (turnRightPTI.buttonPressed)
+                {
+                    TurnRight();
+                }
+                if (handbrakePTI.buttonPressed)
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    Handbrake();
+                }
+                if (!handbrakePTI.buttonPressed)
+                {
+                    RecoverTraction();
+                }
+                if ((!throttlePTI.buttonPressed && !reversePTI.buttonPressed))
+                {
+                    ThrottleOff();
+                }
+                if ((!reversePTI.buttonPressed && !throttlePTI.buttonPressed) && !handbrakePTI.buttonPressed && !deceleratingCar)
+                {
+                    InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                    deceleratingCar = true;
+                }
+                if (!turnLeftPTI.buttonPressed && !turnRightPTI.buttonPressed && steeringAxis != 0f)
+                {
+                    ResetSteeringAngle();
+                }
+
+            }
+            else
+            {
+
+                if (Input.GetKey(KeyCode.W))
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    GoForward();
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    GoReverse();
+                }
+
+                if (Input.GetKey(KeyCode.A))
+                {
+                    TurnLeft();
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    TurnRight();
+                }
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    Handbrake();
+                }
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    RecoverTraction();
+                }
+                if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)))
+                {
+                    ThrottleOff();
+                }
+                if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)) && !Input.GetKey(KeyCode.Space) && !deceleratingCar)
+                {
+                    InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                    deceleratingCar = true;
+                }
+                if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && steeringAxis != 0f)
+                {
+                    ResetSteeringAngle();
+                }
+
+            }
+        } else
+        {
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+
+                switch (touch.phase)
+                {
+                    case TouchPhase.Began:
+                        touchStartPosition = GetWorldPositionFromTouch(touch.position);
+                        break;
+                    case TouchPhase.Moved:
+                    case TouchPhase.Stationary:
+                        touchEndPosition = GetWorldPositionFromTouch(touch.position);
+                        ProcessTouchInput();
+                        break;
+                }
+            }
+            else
+            {
+                // Apply handbrake when no input is detected
+                CancelInvoke("DecelerateCar");
+                deceleratingCar = false;
+                Handbrake();
+            }
         }
 
-        if(turnLeftPTI.buttonPressed){
-          TurnLeft();
-        }
-        if(turnRightPTI.buttonPressed){
-          TurnRight();
-        }
-        if(handbrakePTI.buttonPressed){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          Handbrake();
-        }
-        if(!handbrakePTI.buttonPressed){
-          RecoverTraction();
-        }
-        if((!throttlePTI.buttonPressed && !reversePTI.buttonPressed)){
-          ThrottleOff();
-        }
-        if((!reversePTI.buttonPressed && !throttlePTI.buttonPressed) && !handbrakePTI.buttonPressed && !deceleratingCar){
-          InvokeRepeating("DecelerateCar", 0f, 0.1f);
-          deceleratingCar = true;
-        }
-        if(!turnLeftPTI.buttonPressed && !turnRightPTI.buttonPressed && steeringAxis != 0f){
-          ResetSteeringAngle();
-        }
-
-      }else{
-
-        if(Input.GetKey(KeyCode.W)){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          GoForward();
-        }
-        if(Input.GetKey(KeyCode.S)){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          GoReverse();
-        }
-
-        if(Input.GetKey(KeyCode.A)){
-          TurnLeft();
-        }
-        if(Input.GetKey(KeyCode.D)){
-          TurnRight();
-        }
-        if(Input.GetKey(KeyCode.Space)){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          Handbrake();
-        }
-        if(Input.GetKeyUp(KeyCode.Space)){
-          RecoverTraction();
-        }
-        if((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W))){
-          ThrottleOff();
-        }
-        if((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)) && !Input.GetKey(KeyCode.Space) && !deceleratingCar){
-          InvokeRepeating("DecelerateCar", 0f, 0.1f);
-          deceleratingCar = true;
-        }
-        if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && steeringAxis != 0f){
-          ResetSteeringAngle();
-        }
-
-      }
+      
 
 
       // We call the method AnimateWheelMeshes() in order to match the wheel collider movements with the 3D meshes of the wheels.
@@ -785,4 +854,113 @@ public class PrometeoCarController : MonoBehaviour
       }
     }
 
+    // This is used to get the position of the touch input for movement
+    Vector3 GetWorldPositionFromTouch(Vector2 touchPosition)
+    {
+        Ray ray = mainCamera.ScreenPointToRay(touchPosition);
+        Plane groundPlane = new Plane(Vector3.up, transform.position);
+        float distance;
+        if (groundPlane.Raycast(ray, out distance))
+        {
+            return ray.GetPoint(distance);
+        }
+        return Vector3.zero;
+    }
+
+
+
+    // This is used to call the respective actions based on the touch input
+    /*
+     *if (Input.GetKey(KeyCode.W))
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    GoForward();
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    GoReverse();
+                }
+
+                if (Input.GetKey(KeyCode.A))
+                {
+                    TurnLeft();
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    TurnRight();
+                }
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    Handbrake();
+                }
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    RecoverTraction();
+                }
+                if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)))
+                {
+                    ThrottleOff();
+                }
+                if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)) && !Input.GetKey(KeyCode.Space) && !deceleratingCar)
+                {
+                    InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                    deceleratingCar = true;
+                }
+                if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && steeringAxis != 0f)
+                {
+                    ResetSteeringAngle();
+                }
+     */
+    void ProcessTouchInput()
+    {
+        Vector3 touchDirection = touchEndPosition - touchStartPosition;
+        Vector3 carForward = transform.forward;
+        Vector3 carRight = transform.right;
+
+        // Project vectors onto the horizontal plane
+        touchDirection.y = 0;
+        carForward.y = 0;
+        carRight.y = 0;
+
+        float forwardDot = Vector3.Dot(touchDirection.normalized, carForward.normalized);
+        float rightDot = Vector3.Dot(touchDirection.normalized, carRight.normalized);
+
+
+        // Handle forward/reverse movement
+        if (forwardDot > 0.1f)
+        {
+            GoForward();
+        }
+        else if (forwardDot < -0.1f)
+        {
+            GoReverse();
+        }
+        else
+        {
+            ThrottleOff();
+            InvokeRepeating("DecelerateCar", 0f, 0.1f);
+            deceleratingCar = true;
+        }
+        
+
+        // Handle turning
+        if (rightDot > 0.1f)
+        {
+            TurnRight();
+        }
+        else if (rightDot < -0.1f)
+        {
+            TurnLeft();
+        }
+        else
+        {
+            ResetSteeringAngle();
+        }
+        
+    }
 }

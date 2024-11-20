@@ -74,7 +74,13 @@ public class PrometeoEditor : Editor{
   private SerializedProperty turnRightButton;
   private SerializedProperty turnLeftButton;
   private SerializedProperty handbrakeButton;
-
+  //
+  //
+  //NON-BUTTON TOUCH VARIBLES
+  private SerializedProperty useScreenTouch;
+  private SerializedProperty mainCamera;
+  //
+  //
   private void OnEnable(){
     prometeo = (PrometeoCarController)target;
     SO = new SerializedObject(target);
@@ -118,6 +124,8 @@ public class PrometeoEditor : Editor{
     turnLeftButton = SO.FindProperty("turnLeftButton");
     handbrakeButton = SO.FindProperty("handbrakeButton");
 
+    useScreenTouch = SO.FindProperty("useScreenTouch");
+    mainCamera = SO.FindProperty("mainCamera");
   }
 
   public override void OnInspectorGUI(){
@@ -242,6 +250,17 @@ public class PrometeoEditor : Editor{
 
     EditorGUILayout.EndToggleGroup();
 
+    // Added for non-button based touchscreen movement
+    GUILayout.Space(25);
+    GUILayout.Label("TOUCH SCREEN CAMERA", EditorStyles.boldLabel);
+    GUILayout.Space(10);
+
+    useScreenTouch.boolValue = EditorGUILayout.BeginToggleGroup("Use screen touch (non-button based)?", useScreenTouch.boolValue);
+    EditorGUILayout.Space(10);
+
+        EditorGUILayout.PropertyField(mainCamera, new GUIContent("Main Camera: "));
+
+    EditorGUILayout.EndToggleGroup();
     //END
 
     GUILayout.Space(10);
