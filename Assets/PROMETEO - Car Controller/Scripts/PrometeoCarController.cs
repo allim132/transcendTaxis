@@ -22,11 +22,11 @@ public class PrometeoCarController : MonoBehaviour
       [Space(20)]
       //[Header("CAR SETUP")]
       [Space(10)]
-      [Range(20, 1000)]
+      [Range(20, 10000)]
       public int maxSpeed = 90; //The maximum speed that the car can reach in km/h.
-      [Range(10, 1000)]
+      [Range(10, 10000)]
       public int maxReverseSpeed = 45; //The maximum speed that the car can reach while going on reverse in km/h.
-      [Range(1, 10)]
+      [Range(1, 1000)]
       public int accelerationMultiplier = 2; // How fast the car can accelerate. 1 is a slow acceleration and 10 is the fastest.
       [Space(10)]
       [Range(10, 45)]
@@ -36,9 +36,9 @@ public class PrometeoCarController : MonoBehaviour
       [Space(10)]
       [Range(100, 10000)]
       public int brakeForce = 350; // The strength of the wheel brakes.
-      [Range(1, 10)]
+      [Range(1, 1000)]
       public int decelerationMultiplier = 2; // How fast the car decelerates when the user is not using the throttle.
-      [Range(1, 10)]
+      [Range(1, 1000)]
       public int handbrakeDriftMultiplier = 5; // How much grip the car loses when the user hit the handbrake.
       [Space(10)]
       public Vector3 bodyMassCenter; // This is a vector that contains the center of mass of the car. I recommend to set this value
