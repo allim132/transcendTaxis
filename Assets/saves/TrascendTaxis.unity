@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 121651857}
   - component: {fileID: 121651858}
+  - component: {fileID: 121651859}
   m_Layer: 0
   m_Name: front-left-collider
   m_TagString: Untagged
@@ -190,6 +191,28 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!64 &121651859
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121651856}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &152058016
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,6 +223,7 @@ GameObject:
   m_Component:
   - component: {fileID: 152058017}
   - component: {fileID: 152058018}
+  - component: {fileID: 152058019}
   m_Layer: 0
   m_Name: 'front-right-collider '
   m_TagString: Untagged
@@ -261,6 +285,28 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!64 &152058019
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152058016}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &203844586
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,6 +672,7 @@ GameObject:
   m_Component:
   - component: {fileID: 410397272}
   - component: {fileID: 410397273}
+  - component: {fileID: 410397274}
   m_Layer: 0
   m_Name: 'rear-right-collider '
   m_TagString: Untagged
@@ -687,6 +734,28 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!64 &410397274
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410397271}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &961739749
 GameObject:
   m_ObjectHideFlags: 0
@@ -818,13 +887,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 25, z: -25}
+  m_LocalRotation: {x: 0.42261827, y: 0, z: 0, w: 0.9063079}
+  m_LocalPosition: {x: 0, y: 22.7, z: -13.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: 0, z: 0}
 --- !u!114 &961739754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -834,13 +903,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 961739749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdb97d6508e619d41abdb5752f108991, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f6d3ff905719c845a4a6404bc4d4162, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1513185717}
-  distance: 10
-  height: 15
-  smoothSpeed: 1
+  carTransform: {fileID: 1513185717}
+  followSpeed: 5
+  lookSpeed: 5
 --- !u!1001 &1414210968
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -917,9 +985,6 @@ PrefabInstance:
       addedObject: {fileID: 1513185718}
     - targetCorrespondingSourceObject: {fileID: 7873353548000473952, guid: 47e542a2c20424bba8944902dfe283da, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1513185719}
-    - targetCorrespondingSourceObject: {fileID: 7873353548000473952, guid: 47e542a2c20424bba8944902dfe283da, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1513185722}
   m_SourcePrefab: {fileID: 100100000, guid: 47e542a2c20424bba8944902dfe283da, type: 3}
 --- !u!1 &1511930059
@@ -932,6 +997,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1511930060}
   - component: {fileID: 1511930061}
+  - component: {fileID: 1511930062}
   m_Layer: 0
   m_Name: rear-left-collider
   m_TagString: Untagged
@@ -993,6 +1059,28 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
+--- !u!64 &1511930062
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1511930059}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &1513185712 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7873353548000473952, guid: 47e542a2c20424bba8944902dfe283da, type: 3}
@@ -1007,8 +1095,8 @@ Rigidbody:
   m_GameObject: {fileID: 1513185712}
   serializedVersion: 4
   m_Mass: 1000
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 0.1
+  m_AngularDrag: 0.5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1051,25 +1139,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1590185, y: 1.0539567, z: 4.2362294}
   m_Center: {x: -0.014769554, y: 0.8407608, z: 0.089592695}
---- !u!114 &1513185719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513185712}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e69c91a3099cc7248826e12d3111f246, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  frontRight: {fileID: 152058018}
-  frontLeft: {fileID: 121651858}
-  rearRight: {fileID: 410397273}
-  rearLeft: {fileID: 1511930061}
-  acceleration: 1000
-  breakingForce: 2000
-  maxTurnAngle: 30
 --- !u!114 &1513185722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1079,12 +1148,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 1513185712}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8adc05c6ee0a0ba498150956028cd702, type: 3}
+  m_Script: {fileID: 11500000, guid: c0fefceefe666bb4682b272ec8c5bdd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WheelL: {fileID: 1511930061}
-  WheelR: {fileID: 410397273}
-  AntiRoll: 5000
+  maxSpeed: 190
+  maxReverseSpeed: 45
+  accelerationMultiplier: 10
+  maxSteeringAngle: 27
+  steeringSpeed: 1
+  brakeForce: 350
+  decelerationMultiplier: 2
+  handbrakeDriftMultiplier: 2
+  bodyMassCenter: {x: 0, y: 0, z: 0}
+  frontLeftMesh: {fileID: 121651856}
+  frontLeftCollider: {fileID: 121651858}
+  frontRightMesh: {fileID: 152058016}
+  frontRightCollider: {fileID: 152058018}
+  rearLeftMesh: {fileID: 1511930059}
+  rearLeftCollider: {fileID: 1511930061}
+  rearRightMesh: {fileID: 410397271}
+  rearRightCollider: {fileID: 410397273}
+  useEffects: 0
+  RLWParticleSystem: {fileID: 0}
+  RRWParticleSystem: {fileID: 0}
+  RLWTireSkid: {fileID: 0}
+  RRWTireSkid: {fileID: 0}
+  useUI: 0
+  carSpeedText: {fileID: 0}
+  useSounds: 0
+  carEngineSound: {fileID: 0}
+  tireScreechSound: {fileID: 0}
+  useTouchControls: 0
+  throttleButton: {fileID: 0}
+  reverseButton: {fileID: 0}
+  turnRightButton: {fileID: 0}
+  turnLeftButton: {fileID: 0}
+  handbrakeButton: {fileID: 0}
+  carSpeed: 0
+  isDrifting: 0
+  isTractionLocked: 0
 --- !u!4 &1595842600 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1373711764675068966, guid: 47e542a2c20424bba8944902dfe283da, type: 3}
