@@ -855,12 +855,19 @@ public class PrometeoCarController : MonoBehaviour
     Vector3 GetWorldPositionFromTouch(Vector2 touchPosition)
     {
         Ray ray = mainCamera.ScreenPointToRay(touchPosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            return hit.point; // Use the point where the ray hits a collider
+        }
+        /*
         Plane groundPlane = new Plane(Vector3.up, transform.position);
         float distance;
         if (groundPlane.Raycast(ray, out distance))
         {
             return ray.GetPoint(distance);
         }
+        */
         return Vector3.zero;
     }
 
@@ -869,7 +876,7 @@ public class PrometeoCarController : MonoBehaviour
     // This is used to call the respective actions based on the touch input
     void ProcessTouchInput()
     {
-        Vector3 touchDirection = touchEndPosition - touchStartPosition;
+        Vector3 touchDirection = touchEndPosition - transform.position;
         Vector3 carForward = transform.forward;
         Vector3 carRight = transform.right;
 
