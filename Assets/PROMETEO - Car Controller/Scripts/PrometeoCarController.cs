@@ -260,7 +260,13 @@ public class PrometeoCarController : MonoBehaviour
           }
         }
 
-    }
+        // This fixes the floating wheel error that I have no clue why it's happening
+        float defaultSuspensionDistance = 0.3f;
+        frontLeftCollider.suspensionDistance = defaultSuspensionDistance;
+        frontRightCollider.suspensionDistance = defaultSuspensionDistance;
+        rearLeftCollider.suspensionDistance = defaultSuspensionDistance;
+        rearRightCollider.suspensionDistance = defaultSuspensionDistance;
+}
 
     // Update is called once per frame
     void Update()
@@ -463,6 +469,8 @@ public class PrometeoCarController : MonoBehaviour
     // This method matches both the position and rotation of the WheelColliders with the WheelMeshes.
     void AnimateWheelMeshes(){
       try{
+        
+
         Quaternion FLWRotation;
         Vector3 FLWPosition;
         frontLeftCollider.GetWorldPose(out FLWPosition, out FLWRotation);
@@ -486,7 +494,13 @@ public class PrometeoCarController : MonoBehaviour
         rearRightCollider.GetWorldPose(out RRWPosition, out RRWRotation);
         rearRightMesh.transform.position = RRWPosition;
         rearRightMesh.transform.rotation = RRWRotation;
-      }catch(Exception ex){
+
+        Debug.Log("frontLeftCollider pos: " + FLWPosition);
+        Debug.Log("frontRightCollider pos: " + FRWPosition);
+        Debug.Log("rearLeftCollider pos: " + RLWPosition);
+        Debug.Log("rearRightCollider pos: " + RRWPosition);
+        }
+        catch(Exception ex){
         Debug.LogWarning(ex);
       }
     }
