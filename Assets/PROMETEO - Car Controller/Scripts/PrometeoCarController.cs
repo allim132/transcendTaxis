@@ -277,6 +277,10 @@ public class PrometeoCarController : MonoBehaviour
           }
         }
 
+        // Trying to fix constant tire skid marks
+        RLWTireSkid.emitting = false;
+        RRWTireSkid.emitting = false;
+
         // This fixes the floating wheel error that I have no clue why it's happening
         float defaultSuspensionDistance = 0.3f;
         frontLeftCollider.suspensionDistance = defaultSuspensionDistance;
@@ -424,6 +428,7 @@ public class PrometeoCarController : MonoBehaviour
                     case TouchPhase.Stationary:
                         touchEndPosition = GetWorldPositionFromTouch(touch.position);
                         ProcessTouchInput();
+                        RecoverTraction();
                         break;
                 }
             }
@@ -575,7 +580,7 @@ public class PrometeoCarController : MonoBehaviour
     public void GoForward(){
       //If the forces aplied to the rigidbody in the 'x' asis are greater than
       //3f, it means that the car is losing traction, then the car will start emitting particle systems.
-      if(Mathf.Abs(localVelocityX) > 2.5f){
+      if(Mathf.Abs(localVelocityX) > 2.5f){ // Originally 2.5
         isDrifting = true;
         DriftCarPS();
       }else{
@@ -776,8 +781,9 @@ public class PrometeoCarController : MonoBehaviour
           Debug.LogWarning(ex);
         }
 
+             
         try{
-          if((isTractionLocked || Mathf.Abs(localVelocityX) > 5f) && Mathf.Abs(carSpeed) > 12f){
+          if((isTractionLocked || Mathf.Abs(localVelocityX) > 5f) && Mathf.Abs(carSpeed) > 1f) { 
             RLWTireSkid.emitting = true;
             RRWTireSkid.emitting = true;
           }else {
