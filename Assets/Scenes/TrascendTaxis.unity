@@ -1873,7 +1873,7 @@ MonoBehaviour:
   maxSteeringAngle: 27
   steeringSpeed: 1
   brakeForce: 100
-  decelerationMultiplier: 5
+  decelerationMultiplier: 10
   handbrakeDriftMultiplier: 10
   bodyMassCenter: {x: 0, y: 0.2, z: 0}
   frontLeftMesh: {fileID: 1223523349}

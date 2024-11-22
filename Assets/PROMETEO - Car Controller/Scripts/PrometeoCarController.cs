@@ -890,13 +890,19 @@ public class PrometeoCarController : MonoBehaviour
         float forwardDot = Vector3.Dot(touchDirection.normalized, carForward.normalized);
         float rightDot = Vector3.Dot(touchDirection.normalized, carRight.normalized);
 
-        // Handle forward/reverse movement
-        if (forwardDot > 0.2f)
+        // Calculation of direction via torque
+        float netTorque = frontLeftCollider.motorTorque + frontRightCollider.motorTorque + rearLeftCollider.motorTorque + rearRightCollider.motorTorque;
+
+        Debug.Log("throttleAxis: " + throttleAxis);
+        if (forwardDot > 0.2f) // Forward
         {
-            if (throttleAxis < 0f && (rightDot < 0.2f && rightDot > -0.2f))
+            if (netTorque < 0f)
             {
-                InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                deceleratingCar = true;
+                if (rightDot < 0.1f && rightDot > -0.1f)
+                { 
+                    InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                    deceleratingCar = true;
+                } 
             } else
             {
                 CancelInvoke("DecelerateCar");
@@ -905,12 +911,15 @@ public class PrometeoCarController : MonoBehaviour
             }
             
         }
-        else if (forwardDot < -0.2 )
+        else if (forwardDot < -0.2f) // Reverse
         {
-            if (throttleAxis > 0f && (rightDot < 0.2f && rightDot > -0.2f))
+            if (netTorque > 0f)
             {
-                InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                deceleratingCar = true;
+                if (rightDot < 0.2f && rightDot > -0.2f)
+                {
+                    InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                    deceleratingCar = true;
+                } 
             } else
             {
                 CancelInvoke("DecelerateCar");
@@ -919,7 +928,7 @@ public class PrometeoCarController : MonoBehaviour
             }
             
         }
-        else if (rightDot < 0.2f && rightDot > -0.2f)
+        else if (rightDot < 0.2f && rightDot > -0.2f) // Brake
         {
             InvokeRepeating("DecelerateCar", 0f, 0.1f);
             deceleratingCar = true;
