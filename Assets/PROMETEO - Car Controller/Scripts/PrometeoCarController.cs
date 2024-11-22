@@ -30,7 +30,7 @@ public class PrometeoCarController : MonoBehaviour
       [Range(1, 1000)]
       public int accelerationMultiplier = 2; // How fast the car can accelerate. 1 is a slow acceleration and 10 is the fastest.
       [Space(10)]
-      [Range(10, 45)]
+      [Range(10, 90)]
       public int maxSteeringAngle = 27; // The maximum angle that the tires can reach while rotating the steering wheel.
       [Range(0.1f, 1f)]
       public float steeringSpeed = 0.5f; // How fast the steering wheel turns.
@@ -157,6 +157,7 @@ public class PrometeoCarController : MonoBehaviour
       float localVelocityX;
       bool deceleratingCar;
       bool touchControlsSetup = false;
+      bool driveMode = true; // Car is defaulted to move forward
       /*
       The following variables are used to store information about sideways friction of the wheels (such as
       extremumSlip,extremumValue, asymptoteSlip, asymptoteValue and stiffness). We change this values to
@@ -505,7 +506,7 @@ public class PrometeoCarController : MonoBehaviour
 
     //The following method turns the front car wheels to the left. The speed of this movement will depend on the steeringSpeed variable.
     public void TurnLeft(){
-      steeringAxis = steeringAxis - (Time.deltaTime * 10f * steeringSpeed);
+      steeringAxis = steeringAxis - (Time.deltaTime * 20f * steeringSpeed);
       if(steeringAxis < -1f){
         steeringAxis = -1f;
       }
@@ -516,7 +517,7 @@ public class PrometeoCarController : MonoBehaviour
 
     //The following method turns the front car wheels to the right. The speed of this movement will depend on the steeringSpeed variable.
     public void TurnRight(){
-      steeringAxis = steeringAxis + (Time.deltaTime * 10f * steeringSpeed);
+      steeringAxis = steeringAxis + (Time.deltaTime * 20f * steeringSpeed);
       if(steeringAxis > 1f){
         steeringAxis = 1f;
       }
@@ -899,47 +900,61 @@ public class PrometeoCarController : MonoBehaviour
         Vector3 carVelocity = carRigidbody.linearVelocity;
         float velocity = Vector3.Dot(transform.forward, carVelocity);
 
-        Debug.Log("throttleAxis: " + throttleAxis);
-        if (forwardDot > 0.3f) // Forward
-        {
-            if (velocity < 0) 
-            {
-                if (rightDot < 0.2f && rightDot > -0.2f)
-                { 
-                    InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                    deceleratingCar = true;
-                } 
-            } else
-            {
-                CancelInvoke("DecelerateCar");
-                deceleratingCar = false;
-                GoForward();
-            }
-            
-        }
-        else if (forwardDot < -0.3f) // Reverse
-        {
-            if (velocity > 0)
-            {
-                if (rightDot < 0.2f && rightDot > -0.2f)
-                {
-                    InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                    deceleratingCar = true;
-                } 
-            } else
-            {
-                CancelInvoke("DecelerateCar");
-                deceleratingCar = false;
-                GoReverse();
-            }
-            
-        }
-        else if (rightDot < 0.2f && rightDot > -0.2f) // Brake
-        {
-            InvokeRepeating("DecelerateCar", 0f, 0.1f);
-            deceleratingCar = true;
-        }
+        //Debug.Log("throttleAxis: " + throttleAxis);
         
+
+        if (driveMode)
+        {
+            if (forwardDot > 0.2f) // Forward
+            {
+                if (velocity < -10f)
+                {
+                    if (rightDot < 0.2f && rightDot > -0.2f)
+                    {
+                        driveMode = false;
+                        InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                        deceleratingCar = true;
+                    }
+                }
+                else
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    GoForward();
+                }
+
+            } else if (rightDot < 0.2f && rightDot > -0.2f) // Brake
+            {
+                driveMode = false;
+                InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                deceleratingCar = true;
+            }
+        } else
+        {
+            if (forwardDot < -0.2f) // Reverse
+            {
+                if (velocity > 0f)
+                {
+                    if (rightDot < 0.2f && rightDot > -0.2f)
+                    {
+                        driveMode = false;
+                        InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                        deceleratingCar = true;
+                    }
+                }
+                else
+                {
+                    CancelInvoke("DecelerateCar");
+                    deceleratingCar = false;
+                    GoReverse();
+                }
+            } else if (rightDot < 0.2f && rightDot > -0.2f) // Brake
+            {
+                driveMode = true;
+                InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                deceleratingCar = true;
+            }
+        }
 
         // Handle turning
         if (rightDot > 0.2f)
@@ -947,14 +962,13 @@ public class PrometeoCarController : MonoBehaviour
             TurnRight();
         }
         else if (rightDot < -0.2f)
-        { 
+        {
             TurnLeft();
         }
         else
         {
             ResetSteeringAngle();
         }
-        
     }
 
 }
