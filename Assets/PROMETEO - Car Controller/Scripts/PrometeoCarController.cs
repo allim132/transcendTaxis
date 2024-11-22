@@ -127,6 +127,8 @@ public class PrometeoCarController : MonoBehaviour
 
       [HideInInspector]
       public float carSpeed; // Used to store the speed of the car.
+    
+    
       [HideInInspector]
       public bool isDrifting; // Used to know whether the car is drifting or not.
       [HideInInspector]
@@ -134,6 +136,7 @@ public class PrometeoCarController : MonoBehaviour
 
       [HideInInspector]
       public bool useScreenTouch; // Used to ensure logic for screen touch is used.
+      [HideInInspector]
       public Camera mainCamera; // Used to calculate touchscreen based movement (Without buttons).
 
 
@@ -278,8 +281,8 @@ public class PrometeoCarController : MonoBehaviour
         }
 
         // Trying to fix constant tire skid marks
-        RLWTireSkid.emitting = false;
-        RRWTireSkid.emitting = false;
+        // RLWTireSkid.emitting = false;
+        // RRWTireSkid.emitting = false;
 
         // This fixes the floating wheel error that I have no clue why it's happening
         float defaultSuspensionDistance = 0.3f;
@@ -857,19 +860,20 @@ public class PrometeoCarController : MonoBehaviour
     Vector3 GetWorldPositionFromTouch(Vector2 touchPosition)
     {
         Ray ray = mainCamera.ScreenPointToRay(touchPosition);
+        /*
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
             return hit.point; // Use the point where the ray hits a collider
         }
-        /*
+        */
         Plane groundPlane = new Plane(Vector3.up, transform.position);
         float distance;
         if (groundPlane.Raycast(ray, out distance))
         {
             return ray.GetPoint(distance);
         }
-        */
+        
         return Vector3.zero;
     }
 
@@ -892,13 +896,15 @@ public class PrometeoCarController : MonoBehaviour
 
         // Calculation of direction via torque
         float netTorque = frontLeftCollider.motorTorque + frontRightCollider.motorTorque + rearLeftCollider.motorTorque + rearRightCollider.motorTorque;
+        Vector3 carVelocity = carRigidbody.linearVelocity;
+        float velocity = Vector3.Dot(transform.forward, carVelocity);
 
         Debug.Log("throttleAxis: " + throttleAxis);
-        if (forwardDot > 0.2f) // Forward
+        if (forwardDot > 0.3f) // Forward
         {
-            if (netTorque < 0f)
+            if (velocity < 0) 
             {
-                if (rightDot < 0.1f && rightDot > -0.1f)
+                if (rightDot < 0.2f && rightDot > -0.2f)
                 { 
                     InvokeRepeating("DecelerateCar", 0f, 0.1f);
                     deceleratingCar = true;
@@ -911,9 +917,9 @@ public class PrometeoCarController : MonoBehaviour
             }
             
         }
-        else if (forwardDot < -0.2f) // Reverse
+        else if (forwardDot < -0.3f) // Reverse
         {
-            if (netTorque > 0f)
+            if (velocity > 0)
             {
                 if (rightDot < 0.2f && rightDot > -0.2f)
                 {
