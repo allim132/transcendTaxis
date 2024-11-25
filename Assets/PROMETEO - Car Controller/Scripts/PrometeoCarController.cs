@@ -992,17 +992,25 @@ public class PrometeoCarController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
             return;
 
+        // Calculate the relative velocity magnitude
+        float impactForce = collision.relativeVelocity.magnitude;
+        Debug.Log("impactForce: " + impactForce);
+
+        // Check for serverity of collision
+        if (impactForce >= 8f)
+        {
+            // Increment collision counter
+            collisionCount++;
+
+            UpdateCollisionCountUI();
+        }
+
         // Play collision sound
         if (useSounds && collisionSound != null)
         {
+            collisionSound.volume = Mathf.Clamp(impactForce / 8f, 0.1f, 1f);
             collisionSound.Play();
         }
-
-        // Increment collision counter
-        collisionCount++;
-
-        
-        UpdateCollisionCountUI();
     }
 
     
