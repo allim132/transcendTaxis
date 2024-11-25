@@ -1085,13 +1085,14 @@ public class PrometeoCarController : MonoBehaviour
         {
             if (forwardDot > 0.2f) // Forward
             {
-                if (velocity < -10f)
+                if (velocity <= -5f)
                 {
-                    if (rightDot < 0.2f && rightDot > -0.2f)
+                    if (rightDot > 0.2f || rightDot < -0.2f)
                     {
                         driveMode = false;
-                        InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                        deceleratingCar = true;
+                        ThrottleOff();
+                        //InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                        //deceleratingCar = true;
                     }
                 }
                 else
@@ -1113,13 +1114,14 @@ public class PrometeoCarController : MonoBehaviour
         {
             if (forwardDot < -0.2f) // Reverse
             {
-                if (velocity > 0f)
+                if (velocity >= 5f)
                 {
-                    if (rightDot < 0.2f && rightDot > -0.2f)
+                    if (rightDot > 0.2f || rightDot < -0.2f)
                     {
                         driveMode = false;
-                        InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                        deceleratingCar = true;
+                        ThrottleOff();
+                        //InvokeRepeating("DecelerateCar", 0f, 0.1f);
+                        //deceleratingCar = true;
                     }
                 }
                 else
