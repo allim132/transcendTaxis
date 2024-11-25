@@ -51,11 +51,12 @@ public class PrometeoEditor : Editor
     private SerializedProperty RRWTireSkid;
     //
     //
-    //SPEED TEXT (UI) VARIABLES
+    //UI VARIABLES
     //
     //
     private SerializedProperty useUI;
     private SerializedProperty carSpeedText;
+    private SerializedProperty collisionCountText;
     //
     //
     //SPEED TEXT (UI) VARIABLES
@@ -116,6 +117,7 @@ public class PrometeoEditor : Editor
 
         useUI = SO.FindProperty("useUI");
         carSpeedText = SO.FindProperty("carSpeedText");
+        collisionCountText = SO.FindProperty("collisionCountText");
 
         useSounds = SO.FindProperty("useSounds");
         carEngineSound = SO.FindProperty("carEngineSound");
@@ -214,6 +216,7 @@ public class PrometeoEditor : Editor
         GUILayout.Space(10);
 
         EditorGUILayout.PropertyField(carSpeedText, new GUIContent("Speed Text (UI): "));
+        EditorGUILayout.PropertyField(collisionCountText, new GUIContent("Collision Count Text (UI): "));
 
         EditorGUILayout.EndToggleGroup();
 

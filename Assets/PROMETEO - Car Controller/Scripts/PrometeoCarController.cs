@@ -93,6 +93,7 @@ public class PrometeoCarController : MonoBehaviour
     //The following variable lets you to set up a UI text to display the speed of your car.
     public bool useUI = false;
     public Text carSpeedText; // Used to store the UI object that is going to show the speed of the car.
+    public Text collisionCountText; // Used to store the UI object that is going to show the number of collisions.
 
     //SOUNDS
 
@@ -105,6 +106,7 @@ public class PrometeoCarController : MonoBehaviour
     public AudioSource tireScreechSound; // This variable stores the sound of the tire screech (when the car is drifting).
     public AudioSource collisionSound; // This variable stores the sound of when the car makes collisions.
     float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
+    
 
     //CONTROLS
 
@@ -146,6 +148,9 @@ public class PrometeoCarController : MonoBehaviour
     // These variables are used for calculation of touchscreen based movement
     private Vector3 touchEndPosition;
 
+    // This variable is used to track the number of collisions the taxi has experienced
+    private int collisionCount = 0;
+    
 
     /*
     IMPORTANT: The following variables should not be modified manually since their values are automatically given via script.
@@ -182,6 +187,11 @@ public class PrometeoCarController : MonoBehaviour
             mainCamera = Camera.main;
         }
 
+        // Initialize collision count UI
+        if (useUI && collisionCountText != null)
+        {
+            UpdateCollisionCountUI();
+        }
 
         //In this part, we set the 'carRigidbody' value with the Rigidbody attached to this
         //gameObject. Also, we define the center of mass of the car with the Vector3 given
@@ -974,6 +984,36 @@ public class PrometeoCarController : MonoBehaviour
             driftingAxis = 0f;
         }
     }
+
+    // This method is used to increment the collisions and to play a collision sound.
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Ignore collisions with the ground
+        if (collision.gameObject.CompareTag("Ground"))
+            return;
+
+        // Play collision sound
+        if (useSounds && collisionSound != null)
+        {
+            collisionSound.Play();
+        }
+
+        // Increment collision counter
+        collisionCount++;
+
+        
+        UpdateCollisionCountUI();
+    }
+
+    
+    private void UpdateCollisionCountUI()
+    {
+        if (useUI && collisionCountText != null)
+        {
+            collisionCountText.text = "Collisions: " + collisionCount;
+        }
+    }
+    
 
     // This is used to get the position of the touch input for movement
     Vector3 GetWorldPositionFromTouch(Vector2 touchPosition)
