@@ -453,7 +453,7 @@ public class PrometeoCarController : MonoBehaviour
         }
         else
         {
-            if (Input.touchCount > 0)
+            if (Input.touchCount > 0) // The most relevant code pertaining to touch screen controls
             {
                 Touch touch = Input.GetTouch(0);
 
