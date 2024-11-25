@@ -106,7 +106,7 @@ public class PrometeoCarController : MonoBehaviour
     public AudioSource tireScreechSound; // This variable stores the sound of the tire screech (when the car is drifting).
     public AudioSource collisionSound; // This variable stores the sound of when the car makes collisions.
     float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
-    
+
 
     //CONTROLS
 
@@ -163,7 +163,7 @@ public class PrometeoCarController : MonoBehaviour
     float localVelocityZ;
     float localVelocityX;
     bool deceleratingCar;
-    bool touchControlsSetup = false;
+    // bool touchControlsSetup = false;
     bool driveMode = true; // Car is defaulted to move forward
     /*
     The following variables are used to store information about sideways friction of the wheels (such as
@@ -301,7 +301,7 @@ public class PrometeoCarController : MonoBehaviour
                 turnLeftPTI = turnLeftButton.GetComponent<PrometeoTouchInput>();
                 turnRightPTI = turnRightButton.GetComponent<PrometeoTouchInput>();
                 handbrakePTI = handbrakeButton.GetComponent<PrometeoTouchInput>();
-                touchControlsSetup = true;
+                // touchControlsSetup = true;
 
             }
             else
@@ -339,145 +339,31 @@ public class PrometeoCarController : MonoBehaviour
         localVelocityZ = transform.InverseTransformDirection(carRigidbody.linearVelocity).z;
 
         //CAR PHYSICS
-
-        /*
-        The next part is regarding to the car controller. First, it checks if the user wants to use touch controls (for
-        mobile devices) or analog input controls (WASD + Space).
-
-        The following methods are called whenever a certain key is pressed. For example, in the first 'if' we call the
-        method GoForward() if the user has pressed W.
-
-        In this part of the code we specify what the car needs to do if the user presses W (throttle), S (reverse),
-        A (turn left), D (turn right) or Space bar (handbrake).
-        */
-        if (!useScreenTouch)
+        if (Input.touchCount > 0) // The most relevant code pertaining to touch screen controls
         {
-            if (useTouchControls && touchControlsSetup)
+            Touch touch = Input.GetTouch(0);
+
+            switch (touch.phase)
             {
-
-                if (throttlePTI.buttonPressed)
-                {
-                    CancelInvoke("DecelerateCar");
-                    deceleratingCar = false;
-                    GoForward();
-                }
-                if (reversePTI.buttonPressed)
-                {
-                    CancelInvoke("DecelerateCar");
-                    deceleratingCar = false;
-                    GoReverse();
-                }
-
-                if (turnLeftPTI.buttonPressed)
-                {
-                    TurnLeft();
-                }
-                if (turnRightPTI.buttonPressed)
-                {
-                    TurnRight();
-                }
-                if (handbrakePTI.buttonPressed)
-                {
-                    CancelInvoke("DecelerateCar");
-                    deceleratingCar = false;
-                    Handbrake();
-                }
-                if (!handbrakePTI.buttonPressed)
-                {
+                case TouchPhase.Began:
+                case TouchPhase.Moved:
+                case TouchPhase.Stationary:
+                    touchEndPosition = GetWorldPositionFromTouch(touch.position);
+                    ProcessTouchInput();
                     RecoverTraction();
-                }
-                if ((!throttlePTI.buttonPressed && !reversePTI.buttonPressed))
-                {
-                    ThrottleOff();
-                }
-                if ((!reversePTI.buttonPressed && !throttlePTI.buttonPressed) && !handbrakePTI.buttonPressed && !deceleratingCar)
-                {
-                    InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                    deceleratingCar = true;
-                }
-                if (!turnLeftPTI.buttonPressed && !turnRightPTI.buttonPressed && steeringAxis != 0f)
-                {
-                    ResetSteeringAngle();
-                }
-
-            }
-            else
-            {
-
-                if (Input.GetKey(KeyCode.W))
-                {
-                    CancelInvoke("DecelerateCar");
-                    deceleratingCar = false;
-                    GoForward();
-                }
-                if (Input.GetKey(KeyCode.S))
-                {
-                    CancelInvoke("DecelerateCar");
-                    deceleratingCar = false;
-                    GoReverse();
-                }
-
-                if (Input.GetKey(KeyCode.A))
-                {
-                    TurnLeft();
-                }
-                if (Input.GetKey(KeyCode.D))
-                {
-                    TurnRight();
-                }
-                if (Input.GetKey(KeyCode.Space))
-                {
-                    CancelInvoke("DecelerateCar");
-                    deceleratingCar = false;
-                    Handbrake();
-                }
-                if (Input.GetKeyUp(KeyCode.Space))
-                {
-                    RecoverTraction();
-                }
-                if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)))
-                {
-                    ThrottleOff();
-                }
-                if ((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)) && !Input.GetKey(KeyCode.Space) && !deceleratingCar)
-                {
-                    InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                    deceleratingCar = true;
-                }
-                if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && steeringAxis != 0f)
-                {
-                    ResetSteeringAngle();
-                }
-
+                    break;
             }
         }
         else
         {
-            if (Input.touchCount > 0) // The most relevant code pertaining to touch screen controls
-            {
-                Touch touch = Input.GetTouch(0);
+            // Apply handbrake when no input is detected
 
-                switch (touch.phase)
-                {
-                    case TouchPhase.Began:
-                    case TouchPhase.Moved:
-                    case TouchPhase.Stationary:
-                        touchEndPosition = GetWorldPositionFromTouch(touch.position);
-                        ProcessTouchInput();
-                        RecoverTraction();
-                        break;
-                }
-            }
-            else
-            {
-                // Apply handbrake when no input is detected
-                
-                // CancelInvoke("DecelerateCar");
-                // deceleratingCar = false;
-                ThrottleOff();
-                Handbrake();
-            }
+            // CancelInvoke("DecelerateCar");
+            // deceleratingCar = false;
+            ThrottleOff();
+            Handbrake();
         }
+
 
 
 
@@ -646,7 +532,7 @@ public class PrometeoCarController : MonoBehaviour
     //
 
     // This method apply positive torque to the wheels in order to go forward.
-    public void GoForward()
+    public void GoForward(float accelerationFactor)
     {
         //If the forces aplied to the rigidbody in the 'x' asis are greater than
         //3f, it means that the car is losing traction, then the car will start emitting particle systems.
@@ -661,7 +547,8 @@ public class PrometeoCarController : MonoBehaviour
             DriftCarPS();
         }
         // The following part sets the throttle power to 1 smoothly.
-        throttleAxis = throttleAxis + (Time.deltaTime * 3f);
+        // Use accelerationFactor to modify the throttle behavior
+        throttleAxis = accelerationFactor;
         if (throttleAxis > 1f)
         {
             throttleAxis = 1f;
@@ -701,7 +588,7 @@ public class PrometeoCarController : MonoBehaviour
     }
 
     // This method apply negative torque to the wheels in order to go backwards.
-    public void GoReverse()
+    public void GoReverse(float accelerationFactor)
     {
         //If the forces aplied to the rigidbody in the 'x' asis are greater than
         //3f, it means that the car is losing traction, then the car will start emitting particle systems.
@@ -716,7 +603,7 @@ public class PrometeoCarController : MonoBehaviour
             DriftCarPS();
         }
         // The following part sets the throttle power to -1 smoothly.
-        throttleAxis = throttleAxis - (Time.deltaTime * 3f);
+        throttleAxis = -accelerationFactor;
         if (throttleAxis < -1f)
         {
             throttleAxis = -1f;
@@ -1033,7 +920,7 @@ public class PrometeoCarController : MonoBehaviour
             collisionCountText.text = "Collisions: " + collisionCount;
         }
     }
-    
+
 
     // This is used to get the position of the touch input for movement
     Vector3 GetWorldPositionFromTouch(Vector2 touchPosition)
@@ -1073,69 +960,47 @@ public class PrometeoCarController : MonoBehaviour
         float forwardDot = Vector3.Dot(touchDirection.normalized, carForward.normalized);
         float rightDot = Vector3.Dot(touchDirection.normalized, carRight.normalized);
 
-        // Calculation of direction via torque
-        float netTorque = frontLeftCollider.motorTorque + frontRightCollider.motorTorque + rearLeftCollider.motorTorque + rearRightCollider.motorTorque;
         Vector3 carVelocity = carRigidbody.linearVelocity;
         float velocity = Vector3.Dot(transform.forward, carVelocity);
 
-        //Debug.Log("throttleAxis: " + throttleAxis);
+        float accelerationFactor = 0f;
 
-
-        if (driveMode)
+        if (driveMode) // For when car goes forward
         {
-            if (forwardDot > 0.2f) // Forward
+            if (forwardDot > 0.2f)
             {
-                if (velocity <= -5f)
-                {
-                    if (rightDot > 0.2f || rightDot < -0.2f)
-                    {
-                        driveMode = false;
-                        ThrottleOff();
-                        //InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                        //deceleratingCar = true;
-                    }
-                }
-                else
-                {
-                    CancelInvoke("DecelerateCar");
-                    deceleratingCar = false;
-                    GoForward();
-                }
+                float distanceMultiplier = Mathf.Clamp(touchDirection.magnitude / 10f, 0.1f, 1f);
+                float velocityFactor = Mathf.Clamp01(1f - (velocity / maxSpeed));
+                accelerationFactor = distanceMultiplier * velocityFactor;
 
+                GoForward(accelerationFactor);
             }
-            else if (rightDot < 0.2f && rightDot > -0.2f) // Brake
+            else
             {
-                driveMode = false;
-                InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                deceleratingCar = true;
+                ThrottleOff();
+                if (velocity <= 5f)
+                {
+                    driveMode = false;
+                }
             }
         }
-        else
+        else // For when car goes backward
         {
-            if (forwardDot < -0.2f) // Reverse
+            if (forwardDot < -0.2f)
             {
-                if (velocity >= 5f)
-                {
-                    if (rightDot > 0.2f || rightDot < -0.2f)
-                    {
-                        driveMode = false;
-                        ThrottleOff();
-                        //InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                        //deceleratingCar = true;
-                    }
-                }
-                else
-                {
-                    CancelInvoke("DecelerateCar");
-                    deceleratingCar = false;
-                    GoReverse();
-                }
+                float distanceMultiplier = Mathf.Clamp(touchDirection.magnitude / 10f, 0.1f, 1f);
+                float velocityFactor = Mathf.Clamp01(1f - (Mathf.Abs(velocity) / maxReverseSpeed));
+                accelerationFactor = distanceMultiplier * velocityFactor;
+
+                GoReverse(accelerationFactor);
             }
-            else if (rightDot < 0.2f && rightDot > -0.2f) // Brake
+            else
             {
-                driveMode = true;
-                InvokeRepeating("DecelerateCar", 0f, 0.1f);
-                deceleratingCar = true;
+                ThrottleOff();
+                if (velocity >= -5f)
+                {
+                    driveMode = true;
+                }
             }
         }
 
