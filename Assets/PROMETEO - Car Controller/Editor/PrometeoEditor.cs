@@ -64,6 +64,7 @@ public class PrometeoEditor : Editor
     private SerializedProperty useSounds;
     private SerializedProperty carEngineSound;
     private SerializedProperty tireScreechSound;
+    private SerializedProperty collisionSound;
     //
     //
     //TOUCH CONTROLS VARIABLES
@@ -119,6 +120,7 @@ public class PrometeoEditor : Editor
         useSounds = SO.FindProperty("useSounds");
         carEngineSound = SO.FindProperty("carEngineSound");
         tireScreechSound = SO.FindProperty("tireScreechSound");
+        collisionSound = SO.FindProperty("collisionSound");
 
         useTouchControls = SO.FindProperty("useTouchControls");
         throttleButton = SO.FindProperty("throttleButton");
@@ -230,6 +232,7 @@ public class PrometeoEditor : Editor
 
         EditorGUILayout.PropertyField(carEngineSound, new GUIContent("Car Engine Sound: "));
         EditorGUILayout.PropertyField(tireScreechSound, new GUIContent("Tire Screech Sound: "));
+        EditorGUILayout.PropertyField(collisionSound, new GUIContent("Collision Sound: "));
 
         EditorGUILayout.EndToggleGroup();
 
