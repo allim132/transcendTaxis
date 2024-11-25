@@ -359,8 +359,8 @@ public class PrometeoCarController : MonoBehaviour
             // Apply handbrake when no input is detected
 
             CancelInvoke("DecelerateCar");
-            deceleratingCar = false;
-            // ThrottleOff();
+            // deceleratingCar = false;
+            ThrottleOff();
             Handbrake();
         }
 
