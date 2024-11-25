@@ -150,7 +150,8 @@ public class PrometeoCarController : MonoBehaviour
 
     // This variable is used to track the number of collisions the taxi has experienced
     private int collisionCount = 0;
-    
+    private bool canCollide = true;
+
 
     /*
     IMPORTANT: The following variables should not be modified manually since their values are automatically given via script.
@@ -989,7 +990,7 @@ public class PrometeoCarController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // Ignore collisions with the ground
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground") || !canCollide)
             return;
 
         // Calculate the relative velocity magnitude
@@ -1011,9 +1012,18 @@ public class PrometeoCarController : MonoBehaviour
             collisionSound.volume = Mathf.Clamp(impactForce / 8f, 0.1f, 1f);
             collisionSound.Play();
         }
+
+        // Start collision cooldown
+        StartCoroutine(CollisionCooldown());
     }
 
-    
+    private IEnumerator CollisionCooldown()
+    {
+        canCollide = false;
+        yield return new WaitForSeconds(0.2f); // Delay of 0.2 seconds
+        canCollide = true;
+    }
+
     private void UpdateCollisionCountUI()
     {
         if (useUI && collisionCountText != null)
