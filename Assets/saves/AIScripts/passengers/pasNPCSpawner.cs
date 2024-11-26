@@ -5,8 +5,9 @@ public class pasNPCSpawner : MonoBehaviour
 {
     public GameObject interactableNPCPrefab;
     public pasWaypointSystem waypointSystem;
-    public int maxNPCs = 5;
-    public float spawnInterval = 5f;
+    public DestinationManager destinationManager;
+    public int maxNPCs = 1;
+    public float spawnInterval = 10f;
 
     private List<InteractableNPC> activeNPCs = new List<InteractableNPC>();
     private float timer;
@@ -24,12 +25,24 @@ public class pasNPCSpawner : MonoBehaviour
     void SpawnNPC()
     {
         Transform spawnPoint = waypointSystem.GetRandomAvailableWaypoint();
-        if (spawnPoint != null)
+        if (spawnPoint != null && destinationManager != null)
         {
-            GameObject npcObject = Instantiate(interactableNPCPrefab, spawnPoint.position, Quaternion.identity);
-            InteractableNPC npc = npcObject.GetComponent<InteractableNPC>();
-            npc.Initialize(this);
-            activeNPCs.Add(npc);
+            Transform randomDestination = destinationManager.GetRandomDestination();
+            if (randomDestination != null)
+            {
+                GameObject npcObject = Instantiate(interactableNPCPrefab, spawnPoint.position, Quaternion.identity);
+                InteractableNPC npc = npcObject.GetComponent<InteractableNPC>();
+                npc.Initialize(this, randomDestination);
+                activeNPCs.Add(npc);
+            }
+            else
+            {
+                Debug.LogError("No destinations available in DestinationManager");
+            }
+        }
+        else
+        {
+            Debug.LogError("Spawn point or DestinationManager is not available");
         }
     }
 
