@@ -5,8 +5,8 @@ public class WeatherManager : MonoBehaviour
 {
     public ParticleSystem rainParticleSystem;
     public ParticleSystem snowParticleSystem;
-    public float gameDuration = 420f; // 7 minutes in seconds
-    public float weatherDuration = 60f; // 1 minute in seconds
+    public float gameDuration = 45f; // 45 seconds
+    public float weatherDuration = 15f; // 15 seconds
 
     private bool weatherActivated = false;
 
