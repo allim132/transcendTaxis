@@ -15903,6 +15903,56 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6299818269335585548, guid: 55994d471996942828c8e8550037daef, type: 3}
   m_PrefabInstance: {fileID: 393874476}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &394373178
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 394373180}
+  - component: {fileID: 394373179}
+  m_Layer: 0
+  m_Name: WeatherManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &394373179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394373178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0d073c254e65094b9539fea6dacc9d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rainParticleSystem: {fileID: 2065842393}
+  snowParticleSystem: {fileID: 1104242841}
+  gameDuration: 420
+  weatherDuration: 60
+--- !u!4 &394373180
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394373178}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 120.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2065842394}
+  - {fileID: 1104242842}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &396075096
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43372,6 +43422,7 @@ GameObject:
   - component: {fileID: 1104242842}
   - component: {fileID: 1104242841}
   - component: {fileID: 1104242840}
+  - component: {fileID: 1104242843}
   m_Layer: 0
   m_Name: Snow
   m_TagString: Untagged
@@ -44294,7 +44345,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       scalar: 100
-      minScalar: 10
+      minScalar: 1000
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -48187,13 +48238,28 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1104242839}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 20.2, y: 20, z: 20}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 20.2, y: -50.199997, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 394373180}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &1104242843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104242839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb2f8cc33f93fe74480ae38600ab342e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 1117481722}
+  heightOffset: 10
+  forwardOffset: 5
 --- !u!1 &1105780748
 GameObject:
   m_ObjectHideFlags: 0
@@ -93912,6 +93978,7 @@ GameObject:
   - component: {fileID: 2065842394}
   - component: {fileID: 2065842393}
   - component: {fileID: 2065842392}
+  - component: {fileID: 2065842395}
   m_Layer: 0
   m_Name: Rain
   m_TagString: Untagged
@@ -98727,14 +98794,29 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2065842391}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 120.2, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1838670398}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 394373180}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2065842395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065842391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b0e6d7aebec5841b6cbf5c5832bac7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 1117481722}
+  heightOffset: 10
+  forwardOffset: 5
 --- !u!1001 &2068725023
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -102851,5 +102933,4 @@ SceneRoots:
   - {fileID: 1681446651}
   - {fileID: 2117473111}
   - {fileID: 1557667909}
-  - {fileID: 1104242842}
-  - {fileID: 2065842394}
+  - {fileID: 394373180}
