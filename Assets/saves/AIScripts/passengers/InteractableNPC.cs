@@ -79,4 +79,9 @@ public class InteractableNPC : MonoBehaviour
         spawner.RemoveNPC(this);
         Destroy(gameObject);
     }
+
+    public Transform getAssignedDestination()
+    {
+        return assignedDestination;
+    }
 }
