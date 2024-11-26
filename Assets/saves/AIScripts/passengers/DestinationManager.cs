@@ -7,11 +7,9 @@ public class DestinationManager : MonoBehaviour
 
     public float interactionRadius = 2f;
     public GameObject circlePrefab;
-    
-    public NavigationArrowController arrowController;
-
     private List<Transform> destinations = new List<Transform>();
     private Dictionary<Transform, GameObject> destinationCircles = new Dictionary<Transform, GameObject>();
+    private Transform activeDestination;
 
     void Awake()
     {
@@ -63,6 +61,7 @@ public class DestinationManager : MonoBehaviour
         if (destinationCircles.TryGetValue(destination, out GameObject circle))
         {
             circle.SetActive(true);
+            activeDestination = destination;
         }
     }
 
@@ -72,6 +71,13 @@ public class DestinationManager : MonoBehaviour
         {
             circle.SetActive(false);
         }
+        activeDestination = null;
+    }
+
+    // New function to get the active destination
+    public Transform GetActiveDestination()
+    {
+        return activeDestination;
     }
 
     void Update()
@@ -84,15 +90,14 @@ public class DestinationManager : MonoBehaviour
 
     void CheckPlayerReachedDestination()
     {
-        Transform currentDestination = GameManager.Instance.GetCurrentDestination();
-        if (currentDestination != null)
+        if (activeDestination != null)
         {
-            Collider[] colliders = Physics.OverlapSphere(currentDestination.position, interactionRadius);
+            Collider[] colliders = Physics.OverlapSphere(activeDestination.position, interactionRadius);
             foreach (Collider col in colliders)
             {
                 if (col.CompareTag("Player"))
                 {
-                    OnDestinationReached(currentDestination);
+                    OnDestinationReached(activeDestination);
                     break;
                 }
             }
@@ -104,7 +109,5 @@ public class DestinationManager : MonoBehaviour
         Debug.Log($"Player reached destination: {reachedDestination.name}");
         GameManager.Instance.CompleteTask();
         HideAllDestinations();
-
-        arrowController.DropOffPassenger();
     }
 }

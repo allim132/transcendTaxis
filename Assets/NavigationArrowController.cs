@@ -5,7 +5,7 @@ public class NavigationArrowController : MonoBehaviour
     public Transform car;
     public Transform pickupLocation;
     public Transform destination;
-    public InteractableNPC destinations;
+    // public GameManager theManager;
     public GameObject navigationArrow;
 
     public float arrowDistance = 3f; // Distance of arrow from car
@@ -23,12 +23,14 @@ public class NavigationArrowController : MonoBehaviour
     }
     void Update()
     {
-        
+
 
         // Debug.Log("hasPassenger: " + hasPassenger);
-        Vector3 targetPosition = hasPassenger ? destination.position : pickupLocation.position;
-        PointToDestination(targetPosition);
-
+        if (destination != null)
+        {
+            // Vector3 targetPosition = hasPassenger ? destination.position : pickupLocation.position;
+            PointToDestination(destination.position);
+        }
 
     }
 
@@ -51,7 +53,7 @@ public class NavigationArrowController : MonoBehaviour
     public void PickupPassenger()
     {
         hasPassenger = true;
-        destination = destinations.GetAssignedDestination();
+        destination = DestinationManager.Instance.GetActiveDestination();
         Debug.Log("Passenger Picked up");
         renderer.enabled = true;
         
