@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9e7c29ac6297d6548a98cd1fd852c289
+timeCreated: 1464930284
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 67203
+  packageName: Pause Button Kit
+  packageVersion: 1.0
+  assetPath: Assets/sumPause/SampleScene/Bouncy.physicsMaterial2D
+  uploadId: 127463
