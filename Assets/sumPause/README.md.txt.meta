@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 45b83160447e2ec4c930621355ef4022
+timeCreated: 1468191782
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 67203
+  packageName: Pause Button Kit
+  packageVersion: 1.0
+  assetPath: Assets/sumPause/README.md.txt
+  uploadId: 127463
