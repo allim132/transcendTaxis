@@ -6153,7 +6153,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuPanel: {fileID: 166089065}
-  allAudioSources: []
+  allAudioSources:
+  - {fileID: 204368722}
+  - {fileID: 1564499801}
 --- !u!4 &166144889 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 760039646653639976, guid: 9efb2638cadf04a7d9f711b8a141df62, type: 3}
@@ -7627,7 +7629,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 771ce407ce807b74885ec23ebd1e6647, type: 3}
   m_Resource: {fileID: 8300000, guid: 771ce407ce807b74885ec23ebd1e6647, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -63708,7 +63710,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: f632e2ace80a32e47a2c531f64901a50, type: 3}
   m_Resource: {fileID: 8300000, guid: f632e2ace80a32e47a2c531f64901a50, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 1
   Mute: 0
