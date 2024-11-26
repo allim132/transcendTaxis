@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class mainMenu : MonoBehaviour
 {
+    
+
     // called when "start" button is pressed
     public void OnStartButton ()
     {
@@ -14,4 +16,7 @@ public class mainMenu : MonoBehaviour
     {
         Application.Quit();
     }
+
+    
+
 }
