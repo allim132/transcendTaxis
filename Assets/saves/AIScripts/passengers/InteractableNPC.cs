@@ -7,7 +7,9 @@ public class InteractableNPC : MonoBehaviour
     private GameObject circleInstance;
     private pasNPCSpawner spawner;
     public Transform assignedDestination;
+    public NavigationArrowController arrowController;
     public bool interacted = false;
+
 
     private float despawnInterval = 10f;
     private float timer;
@@ -65,8 +67,14 @@ public class InteractableNPC : MonoBehaviour
         {
             Debug.Log($"NPC Interacted! Destination: {assignedDestination.name}");
             interacted = true;
+
+            // Update Navigation Arrow
+            arrowController.PickupPassenger();
+
             GameManager.Instance.StartTask(assignedDestination);
             Despawn();
+
+            
         }
     }
 
@@ -80,7 +88,7 @@ public class InteractableNPC : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public Transform getAssignedDestination()
+    public Transform GetAssignedDestination()
     {
         return assignedDestination;
     }

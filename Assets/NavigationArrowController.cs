@@ -5,17 +5,31 @@ public class NavigationArrowController : MonoBehaviour
     public Transform car;
     public Transform pickupLocation;
     public Transform destination;
+    public InteractableNPC destinations;
     public GameObject navigationArrow;
 
     public float arrowDistance = 3f; // Distance of arrow from car
     public float arrowHeight = 2f; // Height of arrow above car
 
     private bool hasPassenger = false;
-
+    new Renderer renderer;
+    private void Start()
+    {
+        renderer = gameObject.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.enabled = false;
+        }
+    }
     void Update()
     {
+        
+
+        // Debug.Log("hasPassenger: " + hasPassenger);
         Vector3 targetPosition = hasPassenger ? destination.position : pickupLocation.position;
         PointToDestination(targetPosition);
+
+
     }
 
     void PointToDestination(Vector3 targetPosition)
@@ -32,13 +46,21 @@ public class NavigationArrowController : MonoBehaviour
         navigationArrow.transform.rotation = Quaternion.LookRotation(directionToTarget);
     }
 
+ 
+
     public void PickupPassenger()
     {
         hasPassenger = true;
+        destination = destinations.GetAssignedDestination();
+        Debug.Log("Passenger Picked up");
+        renderer.enabled = true;
+        
     }
 
     public void DropOffPassenger()
     {
         hasPassenger = false;
+        Debug.Log("Passenger Dropped off");
+        renderer.enabled = false;
     }
 }

@@ -7,6 +7,9 @@ public class DestinationManager : MonoBehaviour
 
     public float interactionRadius = 2f;
     public GameObject circlePrefab;
+    
+    public NavigationArrowController arrowController;
+
     private List<Transform> destinations = new List<Transform>();
     private Dictionary<Transform, GameObject> destinationCircles = new Dictionary<Transform, GameObject>();
 
@@ -101,5 +104,7 @@ public class DestinationManager : MonoBehaviour
         Debug.Log($"Player reached destination: {reachedDestination.name}");
         GameManager.Instance.CompleteTask();
         HideAllDestinations();
+
+        arrowController.DropOffPassenger();
     }
 }
