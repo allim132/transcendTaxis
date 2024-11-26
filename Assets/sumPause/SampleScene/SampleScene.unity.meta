@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4abe2534a0d42034e913fcce4823a5be
+timeCreated: 1464926602
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 67203
+  packageName: Pause Button Kit
+  packageVersion: 1.0
+  assetPath: Assets/sumPause/SampleScene/SampleScene.unity
+  uploadId: 127463
