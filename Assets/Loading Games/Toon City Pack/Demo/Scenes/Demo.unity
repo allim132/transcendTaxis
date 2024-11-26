@@ -1702,7 +1702,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 166089069}
+      - m_Target: {fileID: 188972120}
         m_TargetAssemblyTypeName: PauseMenuController, Assembly-CSharp
         m_MethodName: TogglePause
         m_Mode: 1
@@ -6080,7 +6080,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &166089066
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7233,7 +7233,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuPanel: {fileID: 166089065}
-  allAudioSources: []
+  allAudioSources:
+  - {fileID: 204368722}
+  - {fileID: 1176634773}
 --- !u!1001 &189056712
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71552,7 +71554,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 166089069}
+      - m_Target: {fileID: 188972120}
         m_TargetAssemblyTypeName: PauseMenuController, Assembly-CSharp
         m_MethodName: QuitGame
         m_Mode: 1

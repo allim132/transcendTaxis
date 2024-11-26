@@ -1,3 +1,4 @@
+using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,10 +23,12 @@ public class PauseMenuController : MonoBehaviour
         if (isPaused)
         {
             PauseGame();
+            Debug.Log("Game is paused");
         }
         else
         {
             ResumeGame();
+            Debug.Log("Game is unpaused");
         }
     }
 
