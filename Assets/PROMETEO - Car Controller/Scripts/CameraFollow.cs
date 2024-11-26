@@ -17,6 +17,12 @@ public class CameraFollow : MonoBehaviour {
 		initialCameraPosition = gameObject.transform.position;
 		initialCarPosition = carTransform.position;
 		absoluteInitCameraPosition = initialCameraPosition - initialCarPosition;
+
+		Camera mainCamera = Camera.main;
+        if (mainCamera != null && mainCamera.gameObject.scene.name != "Demo")
+        {
+            Destroy(mainCamera.gameObject);
+        }
 	}
 
 	void FixedUpdate()
