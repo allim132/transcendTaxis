@@ -14,9 +14,7 @@ public class mainMenu : MonoBehaviour
     // called when "settings" button is pressed
     public void OnSettingsButton ()
     {
-        Application.Quit();
+        SceneManager.LoadScene("SettingsMenu");
     }
-
-    
 
 }
