@@ -18,7 +18,9 @@ public class WeatherManager : MonoBehaviour
 
     IEnumerator ManageWeather()
     {
+        // Game starts with default (sunny) condition
         DeactivateWeather();
+
         // Wait for a random time before activating weather
         float randomStartTime = Random.Range(0, gameDuration - weatherDuration);
         yield return new WaitForSeconds(randomStartTime);
