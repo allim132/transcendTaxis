@@ -68,10 +68,13 @@ public class InteractableNPC : MonoBehaviour
             Debug.Log($"NPC Interacted! Destination: {assignedDestination.name}");
             interacted = true;
 
+            
+
+            GameManager.Instance.StartTask(assignedDestination);
+
             // Update Navigation Arrow
             arrowController.PickupPassenger();
 
-            GameManager.Instance.StartTask(assignedDestination);
             Despawn();
 
             

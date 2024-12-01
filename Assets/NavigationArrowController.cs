@@ -1,3 +1,4 @@
+using TMPro.Examples;
 using UnityEngine;
 
 public class NavigationArrowController : MonoBehaviour
@@ -53,7 +54,14 @@ public class NavigationArrowController : MonoBehaviour
     public void PickupPassenger()
     {
         hasPassenger = true;
-        destination = DestinationManager.Instance.GetActiveDestination();
+        Transform tempDestination = GameManager.Instance.GetCurrentDestination();
+        if (tempDestination != null)
+        {
+            destination = tempDestination;
+        } else
+        {
+            Debug.Log("Destination from GetCurrentDestination is null!");
+        }
         Debug.Log("Passenger Picked up");
         renderer.enabled = true;
         
