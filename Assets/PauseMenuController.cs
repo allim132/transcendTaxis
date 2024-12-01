@@ -62,11 +62,6 @@ public class PauseMenuController : MonoBehaviour
 
     public void QuitGame()
     {
-        // Handle quitting the game or returning to main menu
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        SceneManager.LoadScene("mainMenuScreen");
     }
 }
