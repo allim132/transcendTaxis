@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System;
 using Random = UnityEngine.Random;
 using static ScoreManager;
@@ -34,7 +35,7 @@ public class ScoreManager : MonoBehaviour
 
     [Space(10)]
     public Text currentScoreHolder;
-    public Text currentPassengerHolder;
+    public TMP_Text currentPassengerHolder;
 
     // Private Variables
 
@@ -68,8 +69,10 @@ public class ScoreManager : MonoBehaviour
     private int startCollisions;
     private int endCollisions;
 
-    
-    
+    // Keep the status for if you have a passenger
+    private bool hasPassenger = false;
+
+
 
 
     public enum PassengerType
@@ -90,7 +93,14 @@ public class ScoreManager : MonoBehaviour
     {
         if (currentPassengerHolder != null)
         {
-            currentPassengerHolder.text = "Passenger Type: " + currentPassengerType.ToString();
+            if (hasPassenger)
+            {
+                currentPassengerHolder.SetText("Passenger Type: " + currentPassengerType.ToString());
+            } else
+            {
+                currentPassengerHolder.SetText("No Passenger");
+            }
+            
         }
     }
 
@@ -98,13 +108,14 @@ public class ScoreManager : MonoBehaviour
     {
         collisionCount = 0;
         deliveryTime = 0f;
-        currentPassengerHolder.text = "No Passenger";
+        hasPassenger = false;
+        currentPassengerHolder.SetText("No Passenger");
     }
 
     public void SetPassengerType(PassengerType type)
     {
         currentPassengerType = type;
-        currentPassengerHolder.text = "Passenger Type: " + currentPassengerType.ToString();
+        currentPassengerHolder.SetText("Passenger Type: " + currentPassengerType.ToString());
 
         Debug.Log("Passenger Type: " + currentPassengerType.ToString());
     }
@@ -117,10 +128,12 @@ public class ScoreManager : MonoBehaviour
         if (randomizer > 0.66)
         {
             SetPassengerType(PassengerType.Normal);
-        } else if (randomizer > 0.33)
+        }
+        else if (randomizer > 0.33)
         {
             SetPassengerType(PassengerType.Cautious);
-        } else
+        }
+        else
         {
             SetPassengerType(PassengerType.InAHurry);
         }
@@ -201,7 +214,7 @@ public class ScoreManager : MonoBehaviour
         int scoreForDeliveryInstance = CalculateFinalScore();
         currentScore += scoreForDeliveryInstance;
         DisplayScore();
-        
+
         ResetDelivery();
     }
 
@@ -209,6 +222,8 @@ public class ScoreManager : MonoBehaviour
     public void StartDelivery()
     {
         ResetDelivery();
+
+        hasPassenger = true;
 
         GetRandomPassenger();
         startTime = Time.time;
