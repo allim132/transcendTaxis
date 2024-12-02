@@ -9,6 +9,8 @@ public class NavigationArrowController : MonoBehaviour
     public ScoreManager scoreManager;
     public GameObject navigationArrow;
 
+    public AudioSource passengerPickedUpSound;
+    public AudioSource passengerDroppedOffSound;
 
     public float arrowDistance = 3f; // Distance of arrow from car
     public float arrowHeight = 2f; // Height of arrow above car
@@ -50,7 +52,15 @@ public class NavigationArrowController : MonoBehaviour
         navigationArrow.transform.rotation = Quaternion.LookRotation(directionToTarget);
     }
 
- 
+    public void PlayPickUpSound()
+    {
+        passengerPickedUpSound.Play();
+    }
+
+    public void PlayDropOffSound()
+    {
+        passengerDroppedOffSound.Play();
+    }
 
     public void PickupPassenger()
     {
@@ -65,7 +75,7 @@ public class NavigationArrowController : MonoBehaviour
         }
         //Debug.Log("Passenger Picked up");
         renderer.enabled = true;
-
+        PlayPickUpSound();
         scoreManager.StartDelivery();
 
     }
@@ -75,7 +85,7 @@ public class NavigationArrowController : MonoBehaviour
         // hasPassenger = false;
         // Debug.Log("Passenger Dropped off");
         renderer.enabled = false;
-
+        PlayDropOffSound();
         scoreManager.EndDelivery();
     }
 }
