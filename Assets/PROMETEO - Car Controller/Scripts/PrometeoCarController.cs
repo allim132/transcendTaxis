@@ -884,7 +884,7 @@ public class PrometeoCarController : MonoBehaviour
 
         // Calculate the relative velocity magnitude
         float impactForce = collision.relativeVelocity.magnitude;
-        Debug.Log("impactForce: " + impactForce);
+        //Debug.Log("impactForce: " + impactForce);
 
         // Check for serverity of collision
         if (impactForce >= 8f)

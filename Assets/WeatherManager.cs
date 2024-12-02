@@ -28,7 +28,7 @@ public class WeatherManager : MonoBehaviour
 
         // Wait for a random time before activating weather
         float randomStartTime = Random.Range(0, weatherGap);
-        Debug.Log("randomStartTime: " +  randomStartTime);
+        // Debug.Log("randomStartTime: " +  randomStartTime);
         yield return new WaitForSeconds(randomStartTime);
         
         // Randomly choose between rain and snow
@@ -37,14 +37,14 @@ public class WeatherManager : MonoBehaviour
             //DeactivateWeather();
             ActivateWeather(rainParticleSystem); // Rain
             prometeoCarController.SetDriftRain();
-            Debug.Log("Raining!");
+            // Debug.Log("Raining!");
         }
         else
         {
             //DeactivateWeather();
             ActivateWeather(snowParticleSystem); // Snow
             prometeoCarController.SetDriftIce();
-            Debug.Log("Snowing!");
+            // Debug.Log("Snowing!");
         }
 
         // Wait for the duration of the weather effect

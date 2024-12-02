@@ -63,7 +63,7 @@ public class NavigationArrowController : MonoBehaviour
         {
             Debug.Log("Destination from GetCurrentDestination is null!");
         }
-        Debug.Log("Passenger Picked up");
+        //Debug.Log("Passenger Picked up");
         renderer.enabled = true;
 
         scoreManager.StartDelivery();
@@ -73,7 +73,7 @@ public class NavigationArrowController : MonoBehaviour
     public void DropOffPassenger()
     {
         // hasPassenger = false;
-        Debug.Log("Passenger Dropped off");
+        // Debug.Log("Passenger Dropped off");
         renderer.enabled = false;
 
         scoreManager.EndDelivery();

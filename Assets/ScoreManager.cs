@@ -2,6 +2,25 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using Random = UnityEngine.Random;
+using static ScoreManager;
+
+public static class PassengerTypeExtensions
+{
+    public static string ToString(this PassengerType passengerType)
+    {
+        switch (passengerType)
+        {
+            case PassengerType.Cautious:
+                return "Cautious";
+            case PassengerType.Normal:
+                return "Normal";
+            case PassengerType.InAHurry:
+                return "In a Hurry";
+            default:
+                return passengerType.ToString();
+        }
+    }
+}
 
 public class ScoreManager : MonoBehaviour
 {
@@ -60,9 +79,19 @@ public class ScoreManager : MonoBehaviour
         InAHurry
     }
 
+
+
     private void Start()
     {
         ResetDelivery();
+    }
+
+    private void LateUpdate()
+    {
+        if (currentPassengerHolder != null)
+        {
+            currentPassengerHolder.text = "Passenger Type: " + currentPassengerType.ToString();
+        }
     }
 
     public void ResetDelivery()
@@ -75,11 +104,13 @@ public class ScoreManager : MonoBehaviour
     public void SetPassengerType(PassengerType type)
     {
         currentPassengerType = type;
-        currentPassengerHolder.text = "Passenger Type: " + currentPassengerType;
+        currentPassengerHolder.text = "Passenger Type: " + currentPassengerType.ToString();
+
+        Debug.Log("Passenger Type: " + currentPassengerType.ToString());
     }
 
     // To be called when picking up a passenger to randomize passenger type.
-    public void getRandomPassenger()
+    public void GetRandomPassenger()
     {
         // 1/3 chance to get either passenger
         float randomizer = Random.Range(0, 1);
@@ -156,10 +187,10 @@ public class ScoreManager : MonoBehaviour
 
     public void DisplayScore()
     {
-        Debug.Log($"Final Score: {currentScore}");
-        Debug.Log($"Passenger Type: {currentPassengerType}");
-        Debug.Log($"Delivery Time: {deliveryTime} seconds");
-        Debug.Log($"Collisions: {collisionCount}");
+        // Debug.Log($"Final Score: {currentScore}");
+        // Debug.Log($"Passenger Type: {currentPassengerType}");
+        // Debug.Log($"Delivery Time: {deliveryTime} seconds");
+        // Debug.Log($"Collisions: {collisionCount}");
         // TODO: Implement UI to display score and details to the player
         currentScoreHolder.text = "Score: " + currentScore;
     }
@@ -178,6 +209,8 @@ public class ScoreManager : MonoBehaviour
     public void StartDelivery()
     {
         ResetDelivery();
+
+        GetRandomPassenger();
         startTime = Time.time;
         startCollisions = prometeoCarController.GetCollisionCount();
     }
@@ -195,3 +228,5 @@ public class ScoreManager : MonoBehaviour
         CompleteDelivery();
     }
 }
+
+

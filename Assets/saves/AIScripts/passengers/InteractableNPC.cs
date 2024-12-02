@@ -65,7 +65,7 @@ public class InteractableNPC : MonoBehaviour
     {
         if (!interacted)
         {
-            Debug.Log($"NPC Interacted! Destination: {assignedDestination.name}");
+            // Debug.Log($"NPC Interacted! Destination: {assignedDestination.name}");
             interacted = true;
 
             

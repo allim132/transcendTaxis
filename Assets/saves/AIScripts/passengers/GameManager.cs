@@ -42,14 +42,14 @@ public class GameManager : MonoBehaviour
 
     public bool IsCurrentDestination(Transform destination)
     {
-        Debug.Log("GetCurrentDestination called. Current destination: " + (currentDestination != null ? currentDestination.name : "None"));
+        // Debug.Log("GetCurrentDestination called. Current destination: " + (currentDestination != null ? currentDestination.name : "None"));
 
         return destination == currentDestination;
     }
 
     public Transform GetCurrentDestination()
     {
-        Debug.Log("GameManager's GetCurrentDestination called");
+        // Debug.Log("GameManager's GetCurrentDestination called");
         return currentDestination;
     }
 }
