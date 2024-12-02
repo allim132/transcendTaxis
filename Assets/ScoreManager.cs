@@ -34,7 +34,7 @@ public class ScoreManager : MonoBehaviour
     public PrometeoCarController prometeoCarController;
 
     [Space(10)]
-    public Text currentScoreHolder;
+    public TMP_Text currentScoreHolder;
     public TMP_Text currentPassengerHolder;
 
     // Private Variables
@@ -205,7 +205,7 @@ public class ScoreManager : MonoBehaviour
         // Debug.Log($"Delivery Time: {deliveryTime} seconds");
         // Debug.Log($"Collisions: {collisionCount}");
         // TODO: Implement UI to display score and details to the player
-        currentScoreHolder.text = "Score: " + currentScore;
+        currentScoreHolder.SetText("Score: " + currentScore);
     }
 
     // Call this method when a delivery is completed
