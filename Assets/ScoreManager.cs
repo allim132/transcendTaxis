@@ -40,11 +40,11 @@ public class ScoreManager : MonoBehaviour
     // Private Variables
 
     // Scoring range
-    private const int MIN_SCORE = 0;
-    private const int MAX_SCORE = 1000;
+    private const int MIN_SCORE = 200;
+    private const int MAX_SCORE = 2000;
 
     // Time scoring parameters
-    private const float MAX_TIME = 300f; // 5 minutes
+    private const float MAX_TIME = 420; // 7 minutes
     private const float TIME_SCORE_WEIGHT = 500f;
     private const float HURRY_TIME_BONUS = 200f;
     private const float HURRY_TIME_THRESHOLD = 60f; // 1 minute
@@ -54,7 +54,7 @@ public class ScoreManager : MonoBehaviour
     private const int COLLISION_THRESHOLD = 5;
 
     // Passenger type multipliers
-    private const float CAUTIOUS_MULTIPLIER = 2f;
+    private const float CAUTIOUS_MULTIPLIER = 1.05f;
     private const float HURRY_MULTIPLIER = 0.5f;
 
     private int collisionCount;
@@ -196,6 +196,28 @@ public class ScoreManager : MonoBehaviour
                 break;
         }
 
+        // Add bonus for low collisions and penalize high collisions
+        if (collisionCount == 0)
+        {
+            collisionScore += 400;
+        } else if (collisionCount <= 5){
+            collisionScore += 200;
+        } else if (collisionCount > 10)
+        {
+            collisionScore -= 100;
+            switch (currentPassengerType)
+            {
+                case PassengerType.Cautious:
+                    collisionScore -= 100;
+                    break;
+                case PassengerType.InAHurry:
+                    if (collisionCount <= 15)
+                    {
+                        collisionScore += 100;
+                    }
+                    break;
+            }
+        }
         return collisionScore;
     }
 
