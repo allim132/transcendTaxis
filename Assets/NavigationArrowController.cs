@@ -6,13 +6,14 @@ public class NavigationArrowController : MonoBehaviour
     public Transform car;
     public Transform pickupLocation;
     public Transform destination;
-    // public GameManager theManager;
+    public ScoreManager scoreManager;
     public GameObject navigationArrow;
+
 
     public float arrowDistance = 3f; // Distance of arrow from car
     public float arrowHeight = 2f; // Height of arrow above car
 
-    private bool hasPassenger = false;
+    // private bool hasPassenger = false;
     new Renderer renderer;
     private void Start()
     {
@@ -53,7 +54,7 @@ public class NavigationArrowController : MonoBehaviour
 
     public void PickupPassenger()
     {
-        hasPassenger = true;
+        // hasPassenger = true;
         Transform tempDestination = GameManager.Instance.GetCurrentDestination();
         if (tempDestination != null)
         {
@@ -64,13 +65,17 @@ public class NavigationArrowController : MonoBehaviour
         }
         Debug.Log("Passenger Picked up");
         renderer.enabled = true;
-        
+
+        scoreManager.StartDelivery();
+
     }
 
     public void DropOffPassenger()
     {
-        hasPassenger = false;
+        // hasPassenger = false;
         Debug.Log("Passenger Dropped off");
         renderer.enabled = false;
+
+        scoreManager.EndDelivery();
     }
 }
