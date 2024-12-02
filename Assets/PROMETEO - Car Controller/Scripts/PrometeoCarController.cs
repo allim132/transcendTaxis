@@ -1019,4 +1019,25 @@ public class PrometeoCarController : MonoBehaviour
         }
     }
 
+
+    public void setDriftNormal()
+    {
+        changeDriftMultiplier(10);
+    }
+
+    public void setDriftRain()
+    {
+        changeDriftMultiplier(400);
+    }
+
+    public void setDriftIce()
+    {
+        changeDriftMultiplier(800);
+    }
+
+
+    public void changeDriftMultiplier(int driftValue)
+    {
+        handbrakeDriftMultiplier = driftValue;
+    }
 }
