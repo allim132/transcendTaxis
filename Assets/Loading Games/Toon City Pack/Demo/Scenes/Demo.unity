@@ -7357,6 +7357,7 @@ MonoBehaviour:
   allAudioSources:
   - {fileID: 204368722}
   - {fileID: 1176634773}
+  - {fileID: 1564499801}
   musicManager: {fileID: 1976325605}
 --- !u!1001 &189056712
 PrefabInstance:
