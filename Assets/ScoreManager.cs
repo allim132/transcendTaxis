@@ -266,6 +266,11 @@ public class ScoreManager : MonoBehaviour
 
         CompleteDelivery();
     }
+
+    public int getScore()
+    {
+        return currentScore;
+    }
 }
 
 
