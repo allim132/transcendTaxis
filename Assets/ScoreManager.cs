@@ -96,11 +96,12 @@ public class ScoreManager : MonoBehaviour
             if (hasPassenger)
             {
                 currentPassengerHolder.SetText("Passenger Type: " + currentPassengerType.ToString());
-            } else
+            }
+            else
             {
                 currentPassengerHolder.SetText("No Passenger");
             }
-            
+
         }
     }
 
@@ -123,19 +124,19 @@ public class ScoreManager : MonoBehaviour
     // To be called when picking up a passenger to randomize passenger type.
     public void GetRandomPassenger()
     {
-        // 1/3 chance to get either passenger
-        float randomizer = Random.Range(0, 1);
-        if (randomizer > 0.66)
+        int randomIndex = Random.Range(0, 3); // Returns 0, 1, or 2
+
+        switch (randomIndex)
         {
-            SetPassengerType(PassengerType.Normal);
-        }
-        else if (randomizer > 0.33)
-        {
-            SetPassengerType(PassengerType.Cautious);
-        }
-        else
-        {
-            SetPassengerType(PassengerType.InAHurry);
+            case 0:
+                SetPassengerType(PassengerType.Normal);
+                break;
+            case 1:
+                SetPassengerType(PassengerType.Cautious);
+                break;
+            case 2:
+                SetPassengerType(PassengerType.InAHurry);
+                break;
         }
     }
 
@@ -202,8 +203,8 @@ public class ScoreManager : MonoBehaviour
     {
         // Debug.Log($"Final Score: {currentScore}");
         // Debug.Log($"Passenger Type: {currentPassengerType}");
-        // Debug.Log($"Delivery Time: {deliveryTime} seconds");
-        // Debug.Log($"Collisions: {collisionCount}");
+        Debug.Log($"Delivery Time: {deliveryTime} seconds");
+        Debug.Log($"Collisions: {collisionCount}");
         // TODO: Implement UI to display score and details to the player
         currentScoreHolder.SetText("Score: " + currentScore);
     }
@@ -212,6 +213,7 @@ public class ScoreManager : MonoBehaviour
     public void CompleteDelivery()
     {
         int scoreForDeliveryInstance = CalculateFinalScore();
+        Debug.Log("Score for delivery: " + scoreForDeliveryInstance);
         currentScore += scoreForDeliveryInstance;
         DisplayScore();
 
