@@ -6,6 +6,7 @@ public class PauseMenuController : MonoBehaviour
 {
     public GameObject pauseMenuPanel; // Reference to the pause menu panel
     public AudioSource[] allAudioSources; // Array to store all audio sources
+    public MusicManager musicManager; // For starting and pausing music
 
     private bool isPaused = false;
 
@@ -22,11 +23,13 @@ public class PauseMenuController : MonoBehaviour
 
         if (isPaused)
         {
+            musicManager.PauseMusic();
             PauseGame();
             Debug.Log("Game is paused");
         }
         else
         {
+            musicManager.ResumeMusic();
             ResumeGame();
             Debug.Log("Game is unpaused");
         }
