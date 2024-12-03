@@ -13,6 +13,7 @@ public class EvaluateWinner : MonoBehaviour
     public TMP_Text finalScoreText;
 
     public ScoreManager scoreManager;
+    public PauseMenuController pauseManager;
 
     private float currentTime;
     private int finalScore;
@@ -48,6 +49,9 @@ public class EvaluateWinner : MonoBehaviour
 
     void EndGame()
     {
+        // Pause game
+        pauseManager.PauseGame();
+
         // Get final score
         finalScore = scoreManager.getScore();
 
