@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 public class PauseMenuController : MonoBehaviour
 {
     public GameObject pauseMenuPanel; // Reference to the pause menu panel
+    public GameObject pauseButton;
+
     public AudioSource[] allAudioSources; // Array to store all audio sources
     public MusicManager musicManager; // For starting and pausing music
    
@@ -40,6 +42,8 @@ public class PauseMenuController : MonoBehaviour
     {
         Time.timeScale = 0f; // Stop time
         pauseMenuPanel.SetActive(true); // Show pause menu
+        pauseButton.SetActive(false); // Hide pause button
+
 
         // Stop all audio sources
         foreach (AudioSource audio in allAudioSources)
@@ -52,6 +56,7 @@ public class PauseMenuController : MonoBehaviour
     public void StopGame()
     {
         Time.timeScale = 0f; // Stop time
+        pauseButton.SetActive(false); // Hide pause button
 
         // Stop all audio sources
         foreach (AudioSource audio in allAudioSources)
@@ -64,7 +69,7 @@ public class PauseMenuController : MonoBehaviour
     {
         Time.timeScale = 1f; // Resume time
         pauseMenuPanel.SetActive(false); // Hide pause menu
-
+        pauseButton.SetActive(true); // Show pause button
         // Resume all audio sources
         foreach (AudioSource audio in allAudioSources)
         {
