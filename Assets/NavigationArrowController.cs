@@ -16,7 +16,7 @@ public class NavigationArrowController : MonoBehaviour
     public float arrowHeight = 2f; // Height of arrow above car
 
     // private bool hasPassenger = false;
-    new Renderer renderer;
+    Renderer renderer;
     private void Start()
     {
         renderer = gameObject.GetComponent<Renderer>();

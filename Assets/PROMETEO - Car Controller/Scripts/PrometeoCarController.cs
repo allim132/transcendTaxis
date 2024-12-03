@@ -15,6 +15,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class PrometeoCarController : MonoBehaviour
 {
@@ -180,6 +181,13 @@ public class PrometeoCarController : MonoBehaviour
     WheelFrictionCurve RRwheelFriction;
     float RRWextremumSlip;
 
+
+    private InputAction touchAction;
+    private Vector2 touchPosition;
+    private bool isTouching = false;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -325,6 +333,33 @@ public class PrometeoCarController : MonoBehaviour
         rearRightCollider.suspensionDistance = defaultSuspensionDistance;
     }
 
+    
+    private void Awake()
+    {
+        // Create a new InputAction for touch input
+        touchAction = new InputAction(binding: "<Touchscreen>/primaryTouch/position");
+        touchAction.Enable();
+    }
+
+    private void OnTouchPerformed(InputAction.CallbackContext context)
+    {
+        touchPosition = context.ReadValue<Vector2>();
+        Debug.Log("TouchPosition: "+ touchPosition);
+        touchEndPosition = GetWorldPositionFromTouch(touchPosition);
+        Debug.Log("TouchEndPosition: " + touchEndPosition);
+        ProcessTouchInput();
+        RecoverTraction();
+    }
+
+    /*
+    private void OnTouchCanceled(InputAction.CallbackContext context)
+    {
+        CancelInvoke("DecelerateCar");
+        ThrottleOff();
+        Handbrake();
+    }
+    */
+
     // Update is called once per frame
     void Update()
     {
@@ -339,35 +374,21 @@ public class PrometeoCarController : MonoBehaviour
         // Save the local velocity of the car in the z axis. Used to know if the car is going forward or backwards.
         localVelocityZ = transform.InverseTransformDirection(carRigidbody.linearVelocity).z;
 
-        //CAR PHYSICS
-        if (Input.touchCount > 0) // The most relevant code pertaining to touch screen controls
+        if (Touchscreen.current.primaryTouch.press.isPressed)
         {
-            Touch touch = Input.GetTouch(0);
-
-            switch (touch.phase)
-            {
-                case TouchPhase.Began:
-                case TouchPhase.Moved:
-                case TouchPhase.Stationary:
-                    touchEndPosition = GetWorldPositionFromTouch(touch.position);
-                    ProcessTouchInput();
-                    RecoverTraction();
-                    break;
-            }
+            isTouching = true;
+            touchPosition = touchAction.ReadValue<Vector2>();
+            touchEndPosition = GetWorldPositionFromTouch(touchPosition);
+            ProcessTouchInput();
+            RecoverTraction();
         }
-        else
+        else if (isTouching)
         {
-            // Apply handbrake when no input is detected
-
+            isTouching = false;
             CancelInvoke("DecelerateCar");
-            // deceleratingCar = false;
             ThrottleOff();
             Handbrake();
         }
-
-
-
-
 
         // We call the method AnimateWheelMeshes() in order to match the wheel collider movements with the 3D meshes of the wheels.
         AnimateWheelMeshes();
@@ -922,7 +943,6 @@ public class PrometeoCarController : MonoBehaviour
         }
     }
 
-
     // This is used to get the position of the touch input for movement
     Vector3 GetWorldPositionFromTouch(Vector2 touchPosition)
     {
@@ -944,6 +964,8 @@ public class PrometeoCarController : MonoBehaviour
         return Vector3.zero;
     }
 
+ 
+    
 
 
     // This is used to call the respective actions based on the touch input
@@ -960,6 +982,9 @@ public class PrometeoCarController : MonoBehaviour
 
         float forwardDot = Vector3.Dot(touchDirection.normalized, carForward.normalized);
         float rightDot = Vector3.Dot(touchDirection.normalized, carRight.normalized);
+
+        //Debug.Log("ForwardDot: " + forwardDot);
+        //Debug.Log("RightDot: "+ rightDot);
 
         Vector3 carVelocity = carRigidbody.linearVelocity;
         float velocity = Vector3.Dot(transform.forward, carVelocity);
