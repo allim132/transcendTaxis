@@ -8,7 +8,9 @@ This README.md is prepared for a USB delivery for the project. The contents of t
 4. Test Plan document (Documents)
 5. User Manual (Documents)
 6. \*Source Code (Assets)
-7. TranscendTaxis.apk
+7. \*\*TranscendTaxis.apk
 
-*Due to the limitations of the flashdrive, I was unable to add all the build files and other unity relevant files.
-*The "Assets.zip" contains all source code as well as assets, but to access the remaining files, please visit https://github.com/allim132/transcendTaxis.git.
+- Due to the limitations of the flashdrive, I was unable to add all the build files and other unity relevant files.
+  The "Assets.zip" contains all source code as well as assets, but to access the remaining files, please visit https://github.com/allim132/transcendTaxis.git.
+
+\*\* In order to run the .apk file, you MUST use an actual android device. Successful emulation of this project was unsuccessful, but running this app on 3 difference android devices have had no issues.
