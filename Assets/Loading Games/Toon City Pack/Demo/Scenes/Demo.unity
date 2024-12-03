@@ -6274,6 +6274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuPanel: {fileID: 166089065}
+  pauseButton: {fileID: 0}
   allAudioSources:
   - {fileID: 204368722}
   - {fileID: 1564499801}
@@ -7354,6 +7355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuPanel: {fileID: 166089065}
+  pauseButton: {fileID: 1582196037}
   allAudioSources:
   - {fileID: 204368722}
   - {fileID: 1176634773}
@@ -85683,7 +85685,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 1164907375}
-  gameDuration: 10
+  gameDuration: 420
   finalScoreText: {fileID: 861268732}
   scoreManager: {fileID: 553833293}
   pauseManager: {fileID: 188972120}
