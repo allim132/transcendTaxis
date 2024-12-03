@@ -1,5 +1,11 @@
 using UnityEngine;
 
+/*
+ * The Head AI Engineer was responsible for this code.
+ * 
+ * Lead Developer Note:
+ * This section is responsible for the PassengerAI component, where the passengers are spawned for the taxi to interact with and pick them up.
+ */
 public class InteractableNPC : MonoBehaviour
 {
     public float interactionRadius = 2f;

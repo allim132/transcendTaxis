@@ -333,68 +333,6 @@ public class PrometeoCarController : MonoBehaviour
         rearRightCollider.suspensionDistance = defaultSuspensionDistance;
     }
 
-    
-    private void Awake()
-    {
-        // Create a new InputAction for touch input
-        touchAction = new InputAction(binding: "<Touchscreen>/primaryTouch/position");
-        touchAction.Enable();
-    }
-
-    private void OnTouchPerformed(InputAction.CallbackContext context)
-    {
-        touchPosition = context.ReadValue<Vector2>();
-        Debug.Log("TouchPosition: "+ touchPosition);
-        touchEndPosition = GetWorldPositionFromTouch(touchPosition);
-        Debug.Log("TouchEndPosition: " + touchEndPosition);
-        ProcessTouchInput();
-        RecoverTraction();
-    }
-
-    /*
-    private void OnTouchCanceled(InputAction.CallbackContext context)
-    {
-        CancelInvoke("DecelerateCar");
-        ThrottleOff();
-        Handbrake();
-    }
-    */
-
-    // Update is called once per frame
-    void Update()
-    {
-        //
-
-        //CAR DATA
-
-        // We determine the speed of the car.
-        carSpeed = (2 * Mathf.PI * frontLeftCollider.radius * frontLeftCollider.rpm * 60) / 1000;
-        // Save the local velocity of the car in the x axis. Used to know if the car is drifting.
-        localVelocityX = transform.InverseTransformDirection(carRigidbody.linearVelocity).x;
-        // Save the local velocity of the car in the z axis. Used to know if the car is going forward or backwards.
-        localVelocityZ = transform.InverseTransformDirection(carRigidbody.linearVelocity).z;
-
-        if (Touchscreen.current.primaryTouch.press.isPressed)
-        {
-            isTouching = true;
-            touchPosition = touchAction.ReadValue<Vector2>();
-            touchEndPosition = GetWorldPositionFromTouch(touchPosition);
-            ProcessTouchInput();
-            RecoverTraction();
-        }
-        else if (isTouching)
-        {
-            isTouching = false;
-            CancelInvoke("DecelerateCar");
-            ThrottleOff();
-            Handbrake();
-        }
-
-        // We call the method AnimateWheelMeshes() in order to match the wheel collider movements with the 3D meshes of the wheels.
-        AnimateWheelMeshes();
-
-    }
-
     // This method converts the car speed data from float to string, and then set the text of the UI carSpeedText with this value.
     public void CarSpeedUI()
     {
@@ -943,17 +881,73 @@ public class PrometeoCarController : MonoBehaviour
         }
     }
 
+    // Source Code explanation:
+    /*
+     * The PrometeoCarController is a free asset on the unity asset store. The creater gives permission for this code to be used in a commercial or personal project.
+     * 
+     * Lead Developer Alex's addition to this code was implemented the single-touch-based movement system.
+     */
+
+    // Initializes touchAction to be used
+    private void Awake()
+    {
+        // Create a new InputAction for touch input
+        touchAction = new InputAction(binding: "<Touchscreen>/primaryTouch/position");
+        touchAction.Enable();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //
+
+        //CAR DATA
+
+        // We determine the speed of the car.
+        carSpeed = (2 * Mathf.PI * frontLeftCollider.radius * frontLeftCollider.rpm * 60) / 1000;
+        // Save the local velocity of the car in the x axis. Used to know if the car is drifting.
+        localVelocityX = transform.InverseTransformDirection(carRigidbody.linearVelocity).x;
+        // Save the local velocity of the car in the z axis. Used to know if the car is going forward or backwards.
+        localVelocityZ = transform.InverseTransformDirection(carRigidbody.linearVelocity).z;
+
+        // Touch Input Integration
+        if (Touchscreen.current.primaryTouch.press.isPressed)
+        {
+            isTouching = true;
+            touchPosition = touchAction.ReadValue<Vector2>();
+            touchEndPosition = GetWorldPositionFromTouch(touchPosition);
+            ProcessTouchInput();
+            RecoverTraction();
+        }
+        else if (isTouching)
+        {
+            isTouching = false;
+            CancelInvoke("DecelerateCar");
+            ThrottleOff();
+            Handbrake();
+        }
+
+        // We call the method AnimateWheelMeshes() in order to match the wheel collider movements with the 3D meshes of the wheels.
+        AnimateWheelMeshes();
+
+    }
+
+    private void OnTouchPerformed(InputAction.CallbackContext context)
+    {
+        touchPosition = context.ReadValue<Vector2>();
+        Debug.Log("TouchPosition: " + touchPosition);
+        touchEndPosition = GetWorldPositionFromTouch(touchPosition);
+        Debug.Log("TouchEndPosition: " + touchEndPosition);
+        ProcessTouchInput();
+        RecoverTraction();
+    }
+
+    
+
     // This is used to get the position of the touch input for movement
     Vector3 GetWorldPositionFromTouch(Vector2 touchPosition)
     {
         Ray ray = mainCamera.ScreenPointToRay(touchPosition);
-        /*
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
-        {
-            return hit.point; // Use the point where the ray hits a collider
-        }
-        */
         Plane groundPlane = new Plane(Vector3.up, transform.position);
         float distance;
         if (groundPlane.Raycast(ray, out distance))
@@ -963,10 +957,6 @@ public class PrometeoCarController : MonoBehaviour
 
         return Vector3.zero;
     }
-
- 
-    
-
 
     // This is used to call the respective actions based on the touch input
     void ProcessTouchInput()
