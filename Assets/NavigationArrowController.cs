@@ -6,13 +6,16 @@ public class NavigationArrowController : MonoBehaviour
     public Transform car;
     public Transform pickupLocation;
     public Transform destination;
-    // public GameManager theManager;
+    public ScoreManager scoreManager;
     public GameObject navigationArrow;
+
+    public AudioSource passengerPickedUpSound;
+    public AudioSource passengerDroppedOffSound;
 
     public float arrowDistance = 3f; // Distance of arrow from car
     public float arrowHeight = 2f; // Height of arrow above car
 
-    private bool hasPassenger = false;
+    // private bool hasPassenger = false;
     new Renderer renderer;
     private void Start()
     {
@@ -49,11 +52,19 @@ public class NavigationArrowController : MonoBehaviour
         navigationArrow.transform.rotation = Quaternion.LookRotation(directionToTarget);
     }
 
- 
+    public void PlayPickUpSound()
+    {
+        passengerPickedUpSound.Play();
+    }
+
+    public void PlayDropOffSound()
+    {
+        passengerDroppedOffSound.Play();
+    }
 
     public void PickupPassenger()
     {
-        hasPassenger = true;
+        // hasPassenger = true;
         Transform tempDestination = GameManager.Instance.GetCurrentDestination();
         if (tempDestination != null)
         {
@@ -62,15 +73,19 @@ public class NavigationArrowController : MonoBehaviour
         {
             Debug.Log("Destination from GetCurrentDestination is null!");
         }
-        Debug.Log("Passenger Picked up");
+        //Debug.Log("Passenger Picked up");
         renderer.enabled = true;
-        
+        PlayPickUpSound();
+        scoreManager.StartDelivery();
+
     }
 
     public void DropOffPassenger()
     {
-        hasPassenger = false;
-        Debug.Log("Passenger Dropped off");
+        // hasPassenger = false;
+        // Debug.Log("Passenger Dropped off");
         renderer.enabled = false;
+        PlayDropOffSound();
+        scoreManager.EndDelivery();
     }
 }

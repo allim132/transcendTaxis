@@ -109,7 +109,7 @@ public class DestinationManager : MonoBehaviour
 
     void OnDestinationReached(Transform reachedDestination)
     {
-        Debug.Log($"Player reached destination: {reachedDestination.name}");
+        // Debug.Log($"Player reached destination: {reachedDestination.name}");
         GameManager.Instance.CompleteTask();
 
         arrowController.DropOffPassenger();

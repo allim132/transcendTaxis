@@ -12,7 +12,7 @@ public class WeatherManager : MonoBehaviour
     public float weatherDuration = 15f; // 15 seconds
     public float weatherGap = 10f; 
 
-    private bool weatherActivated = false;
+    // private bool weatherActivated = false;
     
     void Start()
     {
@@ -24,11 +24,11 @@ public class WeatherManager : MonoBehaviour
     {
         // Game starts with default (sunny) condition
         DeactivateWeather();
-        prometeoCarController.setDriftNormal();
+        prometeoCarController.SetDriftNormal();
 
         // Wait for a random time before activating weather
         float randomStartTime = Random.Range(0, weatherGap);
-        Debug.Log("randomStartTime: " +  randomStartTime);
+        // Debug.Log("randomStartTime: " +  randomStartTime);
         yield return new WaitForSeconds(randomStartTime);
         
         // Randomly choose between rain and snow
@@ -36,22 +36,22 @@ public class WeatherManager : MonoBehaviour
         {
             //DeactivateWeather();
             ActivateWeather(rainParticleSystem); // Rain
-            prometeoCarController.setDriftRain();
-            Debug.Log("Raining!");
+            prometeoCarController.SetDriftRain();
+            // Debug.Log("Raining!");
         }
         else
         {
             //DeactivateWeather();
             ActivateWeather(snowParticleSystem); // Snow
-            prometeoCarController.setDriftIce();
-            Debug.Log("Snowing!");
+            prometeoCarController.SetDriftIce();
+            // Debug.Log("Snowing!");
         }
 
         // Wait for the duration of the weather effect
         yield return new WaitForSeconds(weatherDuration);
 
         // Deactivate all weather effects
-        prometeoCarController.setDriftNormal();
+        prometeoCarController.SetDriftNormal();
         DeactivateWeather();
 
         StartCoroutine(ManageWeather());
@@ -62,7 +62,7 @@ public class WeatherManager : MonoBehaviour
         if (!activate.isPlaying)
         {
             activate.Play();
-            weatherActivated = true;
+            // weatherActivated = true;
         }
     }
 
@@ -78,6 +78,6 @@ public class WeatherManager : MonoBehaviour
             snowParticleSystem.Stop();
         }
 
-        weatherActivated = false;
+        // weatherActivated = false;
     }
 }

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PrometeoCarController : MonoBehaviour
 {
@@ -92,8 +93,8 @@ public class PrometeoCarController : MonoBehaviour
     [Space(10)]
     //The following variable lets you to set up a UI text to display the speed of your car.
     public bool useUI = false;
-    public Text carSpeedText; // Used to store the UI object that is going to show the speed of the car.
-    public Text collisionCountText; // Used to store the UI object that is going to show the number of collisions.
+    public TMP_Text carSpeedText; // Used to store the UI object that is going to show the speed of the car.
+    public TMP_Text collisionCountText; // Used to store the UI object that is going to show the number of collisions.
 
     //SOUNDS
 
@@ -249,7 +250,7 @@ public class PrometeoCarController : MonoBehaviour
         {
             if (carSpeedText != null)
             {
-                carSpeedText.text = "0";
+                carSpeedText.SetText("0");
             }
         }
 
@@ -382,7 +383,7 @@ public class PrometeoCarController : MonoBehaviour
             try
             {
                 float absoluteCarSpeed = Mathf.Abs(carSpeed);
-                carSpeedText.text = Mathf.RoundToInt(absoluteCarSpeed).ToString();
+                carSpeedText.SetText(Mathf.RoundToInt(absoluteCarSpeed).ToString());
             }
             catch (Exception ex)
             {
@@ -884,7 +885,7 @@ public class PrometeoCarController : MonoBehaviour
 
         // Calculate the relative velocity magnitude
         float impactForce = collision.relativeVelocity.magnitude;
-        Debug.Log("impactForce: " + impactForce);
+        //Debug.Log("impactForce: " + impactForce);
 
         // Check for serverity of collision
         if (impactForce >= 8f)
@@ -917,7 +918,7 @@ public class PrometeoCarController : MonoBehaviour
     {
         if (useUI && collisionCountText != null)
         {
-            collisionCountText.text = "Collisions: " + collisionCount;
+            collisionCountText.SetText("Collisions: " + collisionCount);
         }
     }
 
@@ -1020,24 +1021,29 @@ public class PrometeoCarController : MonoBehaviour
     }
 
 
-    public void setDriftNormal()
+    public void SetDriftNormal()
     {
-        changeDriftMultiplier(10);
+        ChangeDriftMultiplier(10);
     }
 
-    public void setDriftRain()
+    public void SetDriftRain()
     {
-        changeDriftMultiplier(400);
+        ChangeDriftMultiplier(400);
     }
 
-    public void setDriftIce()
+    public void SetDriftIce()
     {
-        changeDriftMultiplier(800);
+        ChangeDriftMultiplier(800);
     }
 
 
-    public void changeDriftMultiplier(int driftValue)
+    public void ChangeDriftMultiplier(int driftValue)
     {
         handbrakeDriftMultiplier = driftValue;
+    }
+
+    public int GetCollisionCount()
+    {
+        return collisionCount;
     }
 }
