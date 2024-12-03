@@ -5,24 +5,12 @@ using System;
 using Random = UnityEngine.Random;
 using static ScoreManager;
 
-public static class PassengerTypeExtensions
-{
-    public static string ToString(this PassengerType passengerType)
-    {
-        switch (passengerType)
-        {
-            case PassengerType.Cautious:
-                return "Cautious";
-            case PassengerType.Normal:
-                return "Normal";
-            case PassengerType.InAHurry:
-                return "In a Hurry";
-            default:
-                return passengerType.ToString();
-        }
-    }
-}
-
+/*
+ * This component was developed by Lead Developer Alex
+ * 
+ * Lead Developer Note:
+ * This script is responsible for the "Score" component outlined in the SRA document.
+ */
 public class ScoreManager : MonoBehaviour
 {
     // Public Variables
@@ -71,24 +59,18 @@ public class ScoreManager : MonoBehaviour
 
     // Keep the status for if you have a passenger
     private bool hasPassenger = false;
-
-
-
-
     public enum PassengerType
     {
         Cautious,
         Normal,
         InAHurry
     }
-
-
-
     private void Start()
     {
         ResetDelivery();
     }
 
+    // Ensures that PassengerType is updated
     private void LateUpdate()
     {
         if (currentPassengerHolder != null)
@@ -104,7 +86,7 @@ public class ScoreManager : MonoBehaviour
 
         }
     }
-
+    
     public void ResetDelivery()
     {
         collisionCount = 0;
@@ -140,16 +122,7 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    public void AddCollision()
-    {
-        collisionCount++;
-    }
-
-    public void SetDeliveryTime(float time)
-    {
-        deliveryTime = time;
-    }
-
+    // Calculates the final score by calculating time and collision score seperately
     public int CalculateFinalScore()
     {
         float timeScore = CalculateTimeScore();
@@ -159,6 +132,7 @@ public class ScoreManager : MonoBehaviour
         return Mathf.Clamp(Mathf.RoundToInt(finalScore), MIN_SCORE, MAX_SCORE);
     }
 
+    // Time score calculation
     private float CalculateTimeScore()
     {
         float normalizedTime = Mathf.Clamp01(1f - (deliveryTime / MAX_TIME));
@@ -179,6 +153,7 @@ public class ScoreManager : MonoBehaviour
         return timeScore;
     }
 
+    // Collision score calculation
     private float CalculateCollisionScore()
     {
         float collisionScore = 0f;
@@ -227,11 +202,10 @@ public class ScoreManager : MonoBehaviour
         // Debug.Log($"Passenger Type: {currentPassengerType}");
         Debug.Log($"Delivery Time: {deliveryTime} seconds");
         Debug.Log($"Collisions: {collisionCount}");
-        // TODO: Implement UI to display score and details to the player
         currentScoreHolder.SetText("Score: " + currentScore);
     }
 
-    // Call this method when a delivery is completed
+    // Called by EndDeliver whenever a delivery is completed
     public void CompleteDelivery()
     {
         int scoreForDeliveryInstance = CalculateFinalScore();
@@ -242,7 +216,7 @@ public class ScoreManager : MonoBehaviour
         ResetDelivery();
     }
 
-
+    // Call this method when a passenger is picked up
     public void StartDelivery()
     {
         ResetDelivery();
@@ -254,6 +228,7 @@ public class ScoreManager : MonoBehaviour
         startCollisions = prometeoCarController.GetCollisionCount();
     }
 
+    // Call this method whenever a passenger is dropped off
     public void EndDelivery()
     {
         // Calculate time took for delivery
@@ -267,6 +242,7 @@ public class ScoreManager : MonoBehaviour
         CompleteDelivery();
     }
 
+    // Getter method for another function
     public int getScore()
     {
         return currentScore;

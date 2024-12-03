@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/*
+ * Lead Developer Note:
+ * This code is to account for if the car goes out of boundaries (whether that be driving off the map or getting launched from the map).
+ */
 public class BoundaryChecker : MonoBehaviour
 {
     public float minX, maxX, minY, maxY, minZ, maxZ;

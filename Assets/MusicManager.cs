@@ -1,6 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/* 
+ * This component was developed by the Lead Developer Alex.
+ * 
+ * Lead Developer Note:
+ * This component satisfies the "Music" part of the "Music and Sound Effects" component outlined in the SRA document.
+ */
 public class MusicManager : MonoBehaviour
 {
     public List<AudioSource> gameplayMusicList;
