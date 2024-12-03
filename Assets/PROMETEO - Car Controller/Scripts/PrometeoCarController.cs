@@ -983,8 +983,8 @@ public class PrometeoCarController : MonoBehaviour
         float forwardDot = Vector3.Dot(touchDirection.normalized, carForward.normalized);
         float rightDot = Vector3.Dot(touchDirection.normalized, carRight.normalized);
 
-        Debug.Log("ForwardDot: " + forwardDot);
-        Debug.Log("RightDot: "+ rightDot);
+        //Debug.Log("ForwardDot: " + forwardDot);
+        //Debug.Log("RightDot: "+ rightDot);
 
         Vector3 carVelocity = carRigidbody.linearVelocity;
         float velocity = Vector3.Dot(transform.forward, carVelocity);
