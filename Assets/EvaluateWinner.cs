@@ -49,8 +49,8 @@ public class EvaluateWinner : MonoBehaviour
 
     void EndGame()
     {
-        // Pause game
-        pauseManager.PauseGame();
+        // Stop Game
+        pauseManager.StopGame();
 
         // Get final score
         finalScore = scoreManager.getScore();
@@ -67,6 +67,8 @@ public class EvaluateWinner : MonoBehaviour
 
     public void ResetGame()
     {
+        pauseManager.ResumeGame();
+
         // Go to main menu
         SceneManager.LoadScene("mainMenuScreen");
     }

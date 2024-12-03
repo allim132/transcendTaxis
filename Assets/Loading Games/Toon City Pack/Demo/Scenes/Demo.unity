@@ -85686,6 +85686,7 @@ MonoBehaviour:
   gameDuration: 10
   finalScoreText: {fileID: 861268732}
   scoreManager: {fileID: 553833293}
+  pauseManager: {fileID: 188972120}
   gameOverPanel: {fileID: 1070016754}
 --- !u!4 &1835334271
 Transform:

@@ -47,10 +47,20 @@ public class PauseMenuController : MonoBehaviour
             audio.Pause();
         }
 
-        // Disable car controls here if necessary
     }
 
-    void ResumeGame()
+    public void StopGame()
+    {
+        Time.timeScale = 0f; // Stop time
+
+        // Stop all audio sources
+        foreach (AudioSource audio in allAudioSources)
+        {
+            audio.Pause();
+        }
+    }
+
+    public void ResumeGame()
     {
         Time.timeScale = 1f; // Resume time
         pauseMenuPanel.SetActive(false); // Hide pause menu
