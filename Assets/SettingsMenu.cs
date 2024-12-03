@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Rendering.PostProcessing;
 
 public class SettingsMenu : MonoBehaviour
 {
@@ -11,10 +12,10 @@ public class SettingsMenu : MonoBehaviour
     public Slider musVol; // Music volume slider
     public Slider sfxVol; // SFX volume slider
     public TMP_Dropdown qualityDropdown; // Quality dropdown
-    public Slider brightnessSlider; // Brightness slider
 
     private void Start()
     {
+
         // Load saved quality level
         int savedQuality = PlayerPrefs.GetInt("QualitySetting", QualitySettings.GetQualityLevel());
         QualitySettings.SetQualityLevel(savedQuality);
@@ -31,11 +32,6 @@ public class SettingsMenu : MonoBehaviour
         SetMasterVolume(masVol.value);
         SetMusicVolume(musVol.value);
         SetSFXVolume(sfxVol.value);
-
-        // Load brightness
-        float savedBrightness = PlayerPrefs.GetFloat("Brightness", 1.0f);
-        brightnessSlider.value = savedBrightness;
-        AdjustBrightness(savedBrightness);
     }
 
     public void SetQualityLevel(int qualityIndex)
@@ -43,13 +39,8 @@ public class SettingsMenu : MonoBehaviour
         QualitySettings.SetQualityLevel(qualityIndex);
         PlayerPrefs.SetInt("QualitySetting", qualityIndex);
         PlayerPrefs.Save(); // Save changes
-    }
 
-    public void AdjustBrightness(float value)
-    {
-        RenderSettings.ambientLight = Color.white * value;
-        PlayerPrefs.SetFloat("Brightness", value);
-        PlayerPrefs.Save(); // Save changes
+        Debug.Log($"Quality Level changed to: {QualitySettings.names[qualityIndex]} ({qualityIndex})");
     }
 
     public void SetMasterVolume(float volume)
