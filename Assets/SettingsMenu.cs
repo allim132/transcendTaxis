@@ -54,21 +54,21 @@ public class SettingsMenu : MonoBehaviour
 
     public void SetMasterVolume(float volume)
     {
-        audioMixer.SetFloat("MasterVolume", volume);
+        audioMixer.SetFloat("MasterVolume", Mathf.Log10(Mathf.Clamp(volume, 0.0001f, 1f)) * 20); // Logarithmic scaling
         PlayerPrefs.SetFloat("masterVolume", volume);
         PlayerPrefs.Save(); // Save changes
     }
 
     public void SetMusicVolume(float volume)
     {
-        audioMixer.SetFloat("MusicVolume", volume);
+        audioMixer.SetFloat("MusicVolume", Mathf.Log10(Mathf.Clamp(volume, 0.0001f, 1f)) * 20); // Logarithmic scaling
         PlayerPrefs.SetFloat("musicVolume", volume);
         PlayerPrefs.Save(); // Save changes
     }
 
     public void SetSFXVolume(float volume)
     {
-        audioMixer.SetFloat("SFXVolume", volume);
+        audioMixer.SetFloat("SFXVolume", Mathf.Log10(Mathf.Clamp(volume, 0.0001f, 1f)) * 20); // Logarithmic scaling
         PlayerPrefs.SetFloat("SFXVolume", volume);
         PlayerPrefs.Save(); // Save changes
     }
